@@ -7,9 +7,8 @@ O objetivo principal desenvolver uma aplicação de blog que permite aos usuári
 Descreva livremente mais detalhes do seu projeto aqui.
 
 ### **Autor(es)**
-- **Nome 1**
-- **Nome 2**
-
+- **Caio Gustavo Rodrigue da Silva**
+- 
 ## **2. Proposta do Projeto**
 
 O projeto consiste em:
