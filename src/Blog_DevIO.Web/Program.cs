@@ -1,15 +1,10 @@
 using Blog_DevIO.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddDbContext<BlogContext>(options =>
-             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+builder.Services.AddEF(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

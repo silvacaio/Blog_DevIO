@@ -22,8 +22,8 @@ namespace Blog_DevIO.Controllers
         // GET: Posts
         public async Task<IActionResult> Index()
         {
-            var blogContext = _context.Post.Include(p => p.User);
-            return View(await blogContext.ToListAsync());
+            //var blogContext = _context.Post.Include(p => p.User);
+            return View(await _context.Post.ToListAsync());
         }
 
         // GET: Posts/Details/5
