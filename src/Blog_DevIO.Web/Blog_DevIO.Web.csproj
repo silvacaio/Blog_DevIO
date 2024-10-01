@@ -9,12 +9,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\src\Blog_DevIO.Data\Blog_DevIO.Data.csproj" />
-		<ProjectReference Include="..\src\Blog_DevIO.Domain\Blog_DevIO.Domain.csproj" />
+	  <ProjectReference Include="..\Blog_DevIO.Data\Blog_DevIO.Data.csproj" />
+	  <ProjectReference Include="..\Blog_DevIO.Domain\Blog_DevIO.Domain.csproj" />
 	</ItemGroup>
 
 </Project>
