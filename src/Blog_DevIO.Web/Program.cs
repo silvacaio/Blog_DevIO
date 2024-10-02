@@ -1,10 +1,13 @@
 using Blog_DevIO.Data;
+using Blog_DevIO.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddEF(builder.Configuration);
+builder.Services.AddIdentityContext(builder.Configuration);  
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

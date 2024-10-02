@@ -1,14 +1,12 @@
-﻿using System.Reflection.Metadata;
-
+﻿
 namespace Blog_DevIO.Domain.Entities
 {
     public class Comment : EntityBase
     {
-        public Comment(string content, DateTime creation)
-            : base(creation)
+        public Comment(string content)
+            : base()
         {
             Content = content;
-            // Author = author;
         }
 
         public string Content { get; private set; }
@@ -18,7 +16,6 @@ namespace Blog_DevIO.Domain.Entities
         public Post Post { get; set; }
 
         public Guid UserId { get; set; }
-        public User User { get; set; }
 
         #endregion
     }

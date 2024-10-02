@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blog_DevIO.Domain", "src\Bl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blog_DevIO.Data", "src\Blog_DevIO.Data\Blog_DevIO.Data.csproj", "{43B03BB7-B51E-4899-B198-09EE3DC3F596}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog_DevIO.Identity", "src\Blog_DevIO.Identity\Blog_DevIO.Identity.csproj", "{0223F6F5-568E-421A-A784-03DFC4D1FC5C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{43B03BB7-B51E-4899-B198-09EE3DC3F596}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43B03BB7-B51E-4899-B198-09EE3DC3F596}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43B03BB7-B51E-4899-B198-09EE3DC3F596}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0223F6F5-568E-421A-A784-03DFC4D1FC5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0223F6F5-568E-421A-A784-03DFC4D1FC5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0223F6F5-568E-421A-A784-03DFC4D1FC5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0223F6F5-568E-421A-A784-03DFC4D1FC5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

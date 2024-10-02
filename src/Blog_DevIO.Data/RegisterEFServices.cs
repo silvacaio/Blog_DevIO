@@ -9,7 +9,7 @@ namespace Blog_DevIO.Data
         public static IServiceCollection AddEF(this IServiceCollection services, IConfiguration config)
         {
             services.AddDbContext<BlogContext>(options =>
-             options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+             options.UseSqlServer(config.GetConnectionString("DefaultConnection")));           
 
             return services;
         }
