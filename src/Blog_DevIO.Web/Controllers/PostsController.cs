@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Blog_DevIO.Data;
 using Blog_DevIO.Domain.Entities;
+using Blog_DevIO.Web.ViewModels;
 
 namespace Blog_DevIO.Web.Controllers
 {
@@ -49,12 +50,12 @@ namespace Blog_DevIO.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Content,Tags,UserId,Id,Creation")] Post post)
+        public async Task<IActionResult> Create([Bind("Title,Content,Tags")] CreatePostViewModel post)
         {
             if (ModelState.IsValid)
             {
-                //post.Id = Guid.NewGuid();
-                _context.Add(post);
+                var newPost = new Post(post.Title, post.Content);               
+                 _context.Add(newPost);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

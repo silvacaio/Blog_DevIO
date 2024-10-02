@@ -9,7 +9,10 @@ namespace Blog_DevIO.Domain.Entities
             Content = content;
         }
 
-        public string Content { get; private set; }
+        // Empty constructor for EF
+        protected Comment() { }
+
+        public string Content { get; set; }
 
         #region EF
         public Guid PostId { get; set; }
