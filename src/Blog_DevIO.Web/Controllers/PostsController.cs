@@ -54,7 +54,8 @@ namespace Blog_DevIO.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var newPost = new Post(post.Title, post.Content);               
+                var newPost = new Post(post.Title, post.Content, Guid.NewGuid().ToString());
+               
                  _context.Add(newPost);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

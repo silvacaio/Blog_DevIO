@@ -4,11 +4,12 @@ namespace Blog_DevIO.Domain.Entities
 {
     public class Post : EntityBase
     {
-        public Post(string title, string content)
+        public Post(string title, string content, string userId)
             : base()
         {
             Title = title;
             Content = content;
+            UserId = userId;
         }
 
         // Empty constructor for EF
