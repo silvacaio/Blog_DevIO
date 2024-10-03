@@ -54,7 +54,7 @@ namespace Blog_DevIO.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var newPost = new Post(post.Title, post.Content, Guid.NewGuid().ToString());
+                var newPost = new Post(post.Title, post.Content, "02174cf0–9412–4cfe-afbf-59f706d72cf6");
                
                  _context.Add(newPost);
                 await _context.SaveChangesAsync();
