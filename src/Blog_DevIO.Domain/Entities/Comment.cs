@@ -1,4 +1,5 @@
-﻿
+﻿using Microsoft.AspNetCore.Identity;
+
 namespace Blog_DevIO.Domain.Entities
 {
     public class Comment : EntityBase
@@ -18,7 +19,9 @@ namespace Blog_DevIO.Domain.Entities
         public Guid PostId { get; set; }
         public Post Post { get; set; }
 
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
+
+        public User User { get; private set; }
 
         #endregion
     }

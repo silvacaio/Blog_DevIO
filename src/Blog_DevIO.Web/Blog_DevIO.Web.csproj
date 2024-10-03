@@ -19,7 +19,6 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Blog_DevIO.Data\Blog_DevIO.Data.csproj" />
 	  <ProjectReference Include="..\Blog_DevIO.Domain\Blog_DevIO.Domain.csproj" />
-	  <ProjectReference Include="..\Blog_DevIO.Identity\Blog_DevIO.Identity.csproj" />
 	</ItemGroup>
 
 </Project>

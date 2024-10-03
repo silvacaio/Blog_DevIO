@@ -1,7 +1,6 @@
 ﻿using Blog_DevIO.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Reflection.Emit;
 
 namespace Blog_DevIO.Data.Configurations
 {
@@ -17,7 +16,11 @@ namespace Blog_DevIO.Data.Configurations
 
             builder.HasOne(p => p.Post)
                     .WithMany(p => p.Comments)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(p => p.User)
+                .WithMany(p => p.Comments)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

@@ -17,7 +17,11 @@ namespace Blog_DevIO.Data.Configurations
 
             builder.HasMany(p => p.Comments)
             .WithOne(p => p.Post)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(p => p.User)
+                .WithMany(p => p.Posts)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
