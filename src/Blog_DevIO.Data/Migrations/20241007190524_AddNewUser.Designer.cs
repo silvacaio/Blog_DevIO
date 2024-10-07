@@ -4,6 +4,7 @@ using Blog_DevIO.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog_DevIO.Data.Migrations
 {
     [DbContext(typeof(BlogContext))]
-    partial class BlogContextModelSnapshot : ModelSnapshot
+    [Migration("20241007190524_AddNewUser")]
+    partial class AddNewUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -341,15 +344,14 @@ namespace Blog_DevIO.Data.Migrations
                         {
                             Id = "02174cf0–9412–4cfe-afbf-59f706d72cf6",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "94af7808-1a86-4621-817d-a81f1c40e742",
+                            ConcurrencyStamp = "e0f6b9dd-4166-4cfb-8d32-00b6409cede3",
                             Email = "caiosilva@teste.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
-                            NormalizedEmail = "caiosilva@teste.com",
                             NormalizedUserName = "caiosilva@teste.com",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMG8sFJRCr2Qsg7FtlC5JfOrN11JYu8tV3JXsRYPyUofY4rqj1SjxucCuXURFG8e3g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGC/7ixLt9rZk9WSiZtSIzC3cx0OK26QvybTepYuPMQRofmQ43N+UhG8Ip9g+cHdUA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "33570225-9172-4127-805b-a2009353164c",
+                            SecurityStamp = "b6f0554e-a1a5-41e4-b134-e53290a92ce1",
                             TwoFactorEnabled = false,
                             UserName = "caiosilva@teste.com",
                             FistName = "Caio",
@@ -359,15 +361,14 @@ namespace Blog_DevIO.Data.Migrations
                         {
                             Id = "eb430f77-8705-454d-b9b3-2a2e3081610d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "78629968-af6e-4f21-ab6a-3c5824052410",
+                            ConcurrencyStamp = "bf140a68-8654-446f-9de3-53d381004a10",
                             Email = "blog@teste.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
-                            NormalizedEmail = "blog@teste.com",
                             NormalizedUserName = "blog@teste.com",
-                            PasswordHash = "AQAAAAIAAYagAAAAEO1CUN3Cdl5tA+0TzVRFaoZR5POwdkELnBozDV0YcpsKhGM/wzWC0wGVd6xbqxqfMQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIzTSjcyPfGb17nVbQNmHsxxsI0v+Oy1xIv/mE76a+kO0Es64Rpac0bipdc/XRjYtw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b20bb157-f4e3-4c9a-b26e-82518e710a79",
+                            SecurityStamp = "4478634f-07d7-4c48-94b3-52395d57a838",
                             TwoFactorEnabled = false,
                             UserName = "blog@teste.com",
                             FistName = "User",

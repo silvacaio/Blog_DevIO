@@ -9,9 +9,11 @@ namespace Blog_DevIO.API.Configurations
         public static WebApplicationBuilder AddJwt(this WebApplicationBuilder builder)
         {
             var appSettingsSection = builder.Configuration.GetSection("AppSettings");
-            builder.Services.Configure<JwtSettings>(appSettingsSection);
+            builder.Services.Configure<JwtSettings>(appSettingsSection);        
 
             var appSettings = appSettingsSection.Get<JwtSettings>();
+            builder.Services.AddSingleton(appSettings);
+
             var key = Encoding.ASCII.GetBytes(appSettings.SecretKey);
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

@@ -1,5 +1,6 @@
 ﻿using Blog_DevIO.API.Configurations;
-using Blog_DevIO.Domain.ViewModels.Users;
+using Blog_DevIO.Application.ViewModels.Users;
+using Blog_DevIO.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -48,7 +49,7 @@ namespace Blog_DevIO.API.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                return Ok(GetJwt(user.Email));
+                return Ok(await GetJwt(user.Email));
             }
 
 
@@ -66,10 +67,8 @@ namespace Blog_DevIO.API.Controllers
 
             var result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, true);
 
-            if (result.Succeeded)
-            {
-                return Ok(GetJwt(loginUser.Email));
-            }
+            if (result.Succeeded)           
+                return Ok(await GetJwt(loginUser.Email));        
 
             if (result.IsLockedOut)
             {
@@ -82,6 +81,7 @@ namespace Blog_DevIO.API.Controllers
         private async Task<object> GetJwt(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
+
             var userClaims = await _userManager.GetClaimsAsync(user);
 
             userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));

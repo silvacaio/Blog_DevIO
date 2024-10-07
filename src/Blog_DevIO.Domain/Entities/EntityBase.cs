@@ -2,6 +2,11 @@
 {
     public class EntityBase
     {
+        public EntityBase(Guid id)
+        {
+            Id = id;
+        }
+
         public EntityBase()
         {
             Id = Guid.NewGuid();

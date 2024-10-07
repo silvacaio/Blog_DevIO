@@ -4,7 +4,13 @@ namespace Blog_DevIO.Domain.Entities
 {
     public class Comment : EntityBase
     {
-        public Comment(string content)
+        public Comment(Guid id, string content, string postId, string userId)
+           : base(id)
+        {
+            Content = content;
+        }
+
+        public Comment(string content, string postId, string userId)
             : base()
         {
             Content = content;

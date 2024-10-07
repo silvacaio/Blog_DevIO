@@ -17,7 +17,10 @@ namespace Blog_DevIO.Data.IoC
 
             builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                  .AddRoles<IdentityRole>()
-                 .AddEntityFrameworkStores<BlogContext>();
+                 .AddEntityFrameworkStores<BlogContext>()
+                  .AddSignInManager()
+                  .AddRoleManager<RoleManager<IdentityRole>>()
+                  .AddDefaultTokenProviders();
 
 
             builder.Services.AddScoped<IPostRepository, PostRepository>();

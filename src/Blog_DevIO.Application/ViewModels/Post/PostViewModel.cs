@@ -1,6 +1,6 @@
-﻿namespace Blog_DevIO.Domain.ViewModels.Post
+﻿namespace Blog_DevIO.Application.ViewModels.Post
 {
-    public class CreatePostViewlModel
+    public class PostViewModel
     {
         public string Title { get; private set; }
         public string Content { get; private set; }

@@ -4,6 +4,14 @@ namespace Blog_DevIO.Domain.Entities
 {
     public class Post : EntityBase
     {
+        public Post(Guid id, string title, string content, string userId)
+            : base(id)
+        {
+            Title = title;
+            Content = content;
+            UserId = userId;
+        }
+
         public Post(string title, string content, string userId)
             : base()
         {
