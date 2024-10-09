@@ -2,9 +2,14 @@
 {
     public class EntityBase
     {
-        public EntityBase(DateTime creation)
+        public EntityBase(Guid id)
         {
-            Creation = creation;
+            Id = id;
+        }
+
+        public EntityBase()
+        {
+            Id = Guid.NewGuid();
         }
 
         public Guid Id { get; private set; }

@@ -1,5 +1,4 @@
-﻿@model Blog_DevIO.Domain.Entities.Post
-
+﻿@model Blog_DevIO.Application.ViewModels.Post.CreatePostViewModel
 @{
     ViewData["Title"] = "Create";
 }
@@ -19,23 +18,14 @@
             </div>
             <div class="form-group">
                 <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
+                <textarea asp-for="Content" class="form-control"></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Tags" class="control-label"></label>
                 <input asp-for="Tags" class="form-control" />
                 <span asp-validation-for="Tags" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Creation" class="control-label"></label>
-                <input asp-for="Creation" class="form-control" />
-                <span asp-validation-for="Creation" class="text-danger"></span>
-            </div>
+            </div>          
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

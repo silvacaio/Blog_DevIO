@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Blog_DevIO.Data;
 using Blog_DevIO.Domain.Entities;
+using Blog_DevIO.Application.ViewModels.Post;
 
-namespace Blog_DevIO.Controllers
+namespace Blog_DevIO.Web.Controllers
 {
     public class PostsController : Controller
     {
@@ -22,7 +18,6 @@ namespace Blog_DevIO.Controllers
         // GET: Posts
         public async Task<IActionResult> Index()
         {
-            //var blogContext = _context.Post.Include(p => p.User);
             return View(await _context.Post.ToListAsync());
         }
 
@@ -35,7 +30,6 @@ namespace Blog_DevIO.Controllers
             }
 
             var post = await _context.Post
-                .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (post == null)
             {
@@ -48,7 +42,6 @@ namespace Blog_DevIO.Controllers
         // GET: Posts/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "LastName");
             return View();
         }
 
@@ -57,16 +50,16 @@ namespace Blog_DevIO.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Content,Tags,UserId,Id,Creation")] Post post)
+        public async Task<IActionResult> Create([Bind("Title,Content,Tags")] CreatePostViewModel post)
         {
             if (ModelState.IsValid)
             {
-                //post.Id = Guid.NewGuid();
-                _context.Add(post);
+                var newPost = new Post(post.Title, post.Content, "02174cf0–9412–4cfe-afbf-59f706d72cf6");
+
+                _context.Add(newPost);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "LastName", post.UserId);
             return View(post);
         }
 
@@ -83,7 +76,6 @@ namespace Blog_DevIO.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "LastName", post.UserId);
             return View(post);
         }
 
@@ -119,7 +111,6 @@ namespace Blog_DevIO.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Set<User>(), "Id", "LastName", post.UserId);
             return View(post);
         }
 
@@ -132,7 +123,6 @@ namespace Blog_DevIO.Controllers
             }
 
             var post = await _context.Post
-                .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (post == null)
             {

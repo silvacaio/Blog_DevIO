@@ -1,20 +1,36 @@
-﻿namespace Blog_DevIO.Domain.Entities
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Blog_DevIO.Domain.Entities
 {
     public class Post : EntityBase
     {
-        public Post(string title, string content,  DateTime creation)
-            : base(creation)
+        public Post(Guid id, string title, string content, string userId)
+            : base(id)
         {
             Title = title;
-            Content = content;        }
+            Content = content;
+            UserId = userId;
+        }
+
+        public Post(string title, string content, string userId)
+            : base()
+        {
+            Title = title;
+            Content = content;
+            UserId = userId;
+        }
+
+        // Empty constructor for EF
+        protected Post() { }
 
         public string Title { get; private set; }
         public string Content { get; private set; }
         public string[]? Tags { get; private set; }
-      
-        public ICollection<Comment> Comments { get; }
-        public Guid UserId { get; set; }
-        public User User { get; set; }
 
+        #region EF
+        public ICollection<Comment> Comments { get; }
+        public string UserId { get; private set; }
+        public User User { get; private set; }
+        #endregion
     }
 }

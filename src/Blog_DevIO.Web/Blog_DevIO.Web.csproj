@@ -9,6 +9,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.5" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Blog_DevIO.Application\Blog_DevIO.Application.csproj" />
 	  <ProjectReference Include="..\Blog_DevIO.Data\Blog_DevIO.Data.csproj" />
 	  <ProjectReference Include="..\Blog_DevIO.Domain\Blog_DevIO.Domain.csproj" />
 	</ItemGroup>

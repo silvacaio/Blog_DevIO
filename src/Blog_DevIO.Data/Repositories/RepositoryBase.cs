@@ -15,9 +15,10 @@ namespace Blog_DevIO.Data.Repositories
             DbSet = _blogContext.Set<T>();
         }
 
-        public Task Delete(T entity)
+        public async Task Delete(T entity)
         {
-            return Task.FromResult(DbSet.Remove(entity));
+            DbSet.Remove(entity);
+            await _blogContext.SaveChangesAsync();
         }
 
         public async Task<T?> Get(Guid id)
