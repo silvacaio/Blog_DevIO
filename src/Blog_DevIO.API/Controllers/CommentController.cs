@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Blog_DevIO.Application.Services.Abstractions;
 using Blog_DevIO.Application.ViewModels.Comments;
+using Blog_DevIO.Application.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 namespace Blog_DevIO.API.Controllers
 {
@@ -18,7 +21,7 @@ namespace Blog_DevIO.API.Controllers
             _commentService = commentService;
         }
 
-    
+
         [HttpGet("comment")]
         [ProducesResponseType(typeof(IEnumerable<Comment?>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
@@ -30,7 +33,7 @@ namespace Blog_DevIO.API.Controllers
         [HttpGet("comment/{id:guid}")]
         [ProducesResponseType(typeof(Comment), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesDefaultResponseType]      
+        [ProducesDefaultResponseType]
         public async Task<IActionResult> GetById(Guid id)
         {
             var Comment = await _commentService.GetById(id);
@@ -49,7 +52,7 @@ namespace Blog_DevIO.API.Controllers
             if (ModelState.IsValid == false)
                 return ValidationProblem(ModelState);
 
-            await _commentService.Create(comment, "");
+            await _commentService.Create(comment);
 
             return RedirectToAction("GetByUser");
         }
@@ -58,12 +61,34 @@ namespace Blog_DevIO.API.Controllers
         [ProducesDefaultResponseType]
         [ProducesResponseType(typeof(Post), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put(EditCommentViewModel comment)
+        public async Task<IActionResult> Put(Guid id, EditCommentViewModel comment)
         {
+            if (id != comment.Id)
+                return BadRequest();
+
             if (ModelState.IsValid == false)
                 return ValidationProblem(ModelState);
 
-            await _commentService.Update(comment, "");
+            if (_commentService.GetCommentToAction(id) == null)
+                return NotFound();
+
+            try
+            {
+                await _commentService.Update(comment);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (_commentService.GetById(id) == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            await _commentService.Update(comment);
 
             return RedirectToAction("GetByUser");
         }
@@ -75,8 +100,7 @@ namespace Blog_DevIO.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var Comment = await _commentService.GetById(id);
-            if (Comment == null)
+            if (_commentService.GetCommentToAction(id) == null)
                 return NotFound();
 
             await _commentService.Delete(id);

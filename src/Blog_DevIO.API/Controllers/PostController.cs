@@ -3,25 +3,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Blog_DevIO.Application.Services.Abstractions;
 using Blog_DevIO.Application.ViewModels.Post;
-using Blog_DevIO.API.Configurations;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace Blog_DevIO.API.Controllers
 {
+    [Authorize]
     [Route("api/")]
     [ApiController]
-    [Authorize]
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
-        private readonly JwtSettings _jwtSettings;
-
-
-        public PostController(IPostService postService)
+        private readonly IUserService _userService;
+        public PostController(IPostService postService, IUserService userService)
         {
             _postService = postService;
+            _userService = userService;
         }
-
 
         [HttpGet("post")]
         [ProducesResponseType(typeof(IEnumerable<Post?>), StatusCodes.Status200OK)]
@@ -49,7 +46,7 @@ namespace Blog_DevIO.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetByUser()
         {
-            var post = await _postService.GetByUser("");
+            var post = await _postService.GetByUser();
             if (post == null)
                 return NotFound();
 
@@ -65,7 +62,7 @@ namespace Blog_DevIO.API.Controllers
             if (ModelState.IsValid == false)
                 return ValidationProblem(ModelState);
 
-            await _postService.Create(post, "");
+            await _postService.Create(post);
 
             return RedirectToAction("GetByUser");
         }
@@ -74,25 +71,47 @@ namespace Blog_DevIO.API.Controllers
         [ProducesDefaultResponseType]
         [ProducesResponseType(typeof(Post), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put(EditPostViewModel post)
+        public async Task<IActionResult> Put(Guid id, EditPostViewModel post)
         {
+            if (id != post.Id)
+                return BadRequest();
+
             if (ModelState.IsValid == false)
                 return ValidationProblem(ModelState);
 
-            await _postService.Update(post, "");
+            if (_postService.GetPostToAction(id) == null)
+                return NotFound();
+
+            try
+            {
+                await _postService.Update(post);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (_postService.GetById(id) == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            await _postService.Update(post);
 
             return RedirectToAction("GetByUser");
         }
 
 
+        [Authorize]
         [HttpDelete("post")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var post = await _postService.GetById(id);
-            if (post == null)
+            if (_postService.GetPostToAction(id) == null)
                 return NotFound();
 
             await _postService.Delete(id);

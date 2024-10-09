@@ -15,7 +15,7 @@ namespace Blog_DevIO.Data.IoC
             builder.Services.AddDbContext<BlogContext>(options =>
               options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                  .AddRoles<IdentityRole>()
                  .AddEntityFrameworkStores<BlogContext>()
                   .AddSignInManager()
@@ -24,6 +24,8 @@ namespace Blog_DevIO.Data.IoC
 
 
             builder.Services.AddScoped<IPostRepository, PostRepository>();
+            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+
 
             return builder;
         }

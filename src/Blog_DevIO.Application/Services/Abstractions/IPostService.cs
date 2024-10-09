@@ -7,9 +7,10 @@ namespace Blog_DevIO.Application.Services.Abstractions
     {
         public Task<IEnumerable<Post?>> Get();
         public Task<Post?> GetById(Guid id);
-        Task<IEnumerable<Post?>> GetByUser(string userId);
-        public Task Create(CreatePostViewModel post, string userId);
-        Task<Post?> Update(EditPostViewModel comment, string userId);
+        Task<IEnumerable<Post?>> GetByUser();
+        public Task Create(CreatePostViewModel post);
+        Task<Post?> Update(EditPostViewModel comment);
         public Task Delete(Guid id);
+        Task<Post?> GetPostToAction(Guid postId);
     }
 }

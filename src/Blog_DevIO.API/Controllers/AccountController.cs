@@ -28,7 +28,7 @@ namespace Blog_DevIO.API.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]       
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary), StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
@@ -67,8 +67,8 @@ namespace Blog_DevIO.API.Controllers
 
             var result = await _signInManager.PasswordSignInAsync(loginUser.Email, loginUser.Password, false, true);
 
-            if (result.Succeeded)           
-                return Ok(await GetJwt(loginUser.Email));        
+            if (result.Succeeded)
+                return Ok(await GetJwt(loginUser.Email));
 
             if (result.IsLockedOut)
             {
@@ -84,12 +84,15 @@ namespace Blog_DevIO.API.Controllers
 
             var userClaims = await _userManager.GetClaimsAsync(user);
 
+            userClaims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
             userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
             userClaims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
-            userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-            // userClaims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
+            userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));            
 
-            // Necessário converver para IdentityClaims
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach (var role in roles)
+                userClaims.Add(new Claim(ClaimTypes.Role, role));
+
             var identityClaims = new ClaimsIdentity();
             identityClaims.AddClaims(userClaims);
 

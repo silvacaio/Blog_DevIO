@@ -9,8 +9,10 @@ namespace Blog_DevIO.Application.Services.Abstractions
 
         public Task<Comment?> GetById(Guid id);
 
-        public Task<Comment?> Delete(Guid id);
-        Task Create(CreateCommentViewModel comment, string userId);
-        Task<Comment?> Update(EditCommentViewModel comment, string userId);
+        public Task Delete(Guid id);
+        Task Create(CreateCommentViewModel comment);
+        Task<Comment?> Update(EditCommentViewModel comment);
+
+        Task<Comment?> GetCommentToAction(Guid commentId);
     }
 }

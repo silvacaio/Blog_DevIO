@@ -7,9 +7,11 @@ namespace Blog_DevIO.Application.Services
     public class PostService : IPostService
     {
         private readonly IPostRepository _postRepository;
-        public PostService(IPostRepository postRepository)
+        private readonly IUserService _userService;
+        public PostService(IPostRepository postRepository, IUserService userService)
         {
             _postRepository = postRepository;
+            _userService = userService;
         }
 
         public async Task<IEnumerable<Post?>> Get()
@@ -22,31 +24,26 @@ namespace Blog_DevIO.Application.Services
             return await _postRepository.Get(id);
         }
 
-        public Task<IEnumerable<Post?>> GetByUser(string userId)
+        public Task<IEnumerable<Post?>> GetByUser()
         {
+            var userId = _userService.GetId();
             return _postRepository.GetByUser(userId);
         }
 
-        public async Task Create(CreatePostViewModel post, string userId)
+        public async Task Create(CreatePostViewModel post)
         {
+            var userId = _userService.GetId();
             var newPost = new Post(post.Title, post.Content, userId);
             await _postRepository.Save(newPost);
         }
 
-        public async Task<Post?> Update(EditPostViewModel post, string userId)
+        public async Task<Post?> Update(EditPostViewModel post)
         {
-            var postToEdit = await GetById(post.Id);
-            if (postToEdit == null)
+            var postToAction = await GetPostToAction(post.Id);
+            if (postToAction == null)
                 return null;
 
-            if (postToEdit.UserId != userId)
-                return null;
-
-            if (postToEdit.Id != post.Id)
-                return null;
-
-
-            var newPost = new Post(post.Id, post.Title, post.Content, userId);
+            var newPost = new Post(post.Id, post.Title, post.Content, postToAction.UserId);
             await _postRepository.Update(newPost);
 
             return newPost;
@@ -54,11 +51,23 @@ namespace Blog_DevIO.Application.Services
 
         public async Task Delete(Guid id)
         {
-            var post = await GetById(id);
-            if (post == null)
+            var postToAction = await GetPostToAction(id);
+            if (postToAction == null)
                 return;
 
-            await _postRepository.Delete(post);
+            await _postRepository.Delete(postToAction);
+        }
+
+        public async Task<Post?> GetPostToAction(Guid postId)
+        {
+            var postToEdit = await GetById(postId);
+            if (postToEdit == null)
+                return null;
+
+            if (_userService.IsAdmin() == false || _userService.GetId() != postToEdit.UserId)
+                return null;
+
+            return postToEdit;
         }
     }
 }
