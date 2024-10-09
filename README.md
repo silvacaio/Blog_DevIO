@@ -40,9 +40,11 @@ A estrutura do projeto é organizada da seguinte forma:
 
 
 - src/
-  - Blog.Web/ - Projeto MVC
-  - Blog.Api/ - API RESTful
-  - Blog.Data/ - Modelos de Dados e Configuração do EF Core
+  - Blog_DevIO.Web/ - Projeto MVC
+  - Blog_DevIO.API/ - API RESTful
+  - Blog_DevIO.Data/ - Modelos de Dados, Repositorios, Identity e Configuração do EF Core
+  - Blog_DevIO.Application/ - Camada com validações e abstrações
+  - Blog_DevIO.Domain/ - Domínio de negocio
 - README.md - Arquivo de Documentação do Projeto
 - FEEDBACK.md - Arquivo para Consolidação dos Feedbacks
 - .gitignore - Arquivo de Ignoração do Git
