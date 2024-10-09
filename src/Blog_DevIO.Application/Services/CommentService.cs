@@ -25,6 +25,10 @@ namespace Blog_DevIO.Application.Services
         {
             return await _commentRepository.Get(id);
         }
+        public async Task<IEnumerable<Comment?>> GetByPostId(Guid postId)
+        {
+            return await _commentRepository.GetByPostId(postId);
+        }
         public async Task Create(CreateCommentViewModel comment)
         {
             var userId = _userService.GetId();

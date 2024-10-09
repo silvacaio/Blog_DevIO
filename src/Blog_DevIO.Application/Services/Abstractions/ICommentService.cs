@@ -14,5 +14,6 @@ namespace Blog_DevIO.Application.Services.Abstractions
         Task<Comment?> Update(EditCommentViewModel comment);
 
         Task<Comment?> GetCommentToAction(Guid commentId);
+        Task<IEnumerable<Comment?>> GetByPostId(Guid postId);
     }
 }

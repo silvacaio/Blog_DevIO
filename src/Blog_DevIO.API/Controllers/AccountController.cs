@@ -32,7 +32,7 @@ namespace Blog_DevIO.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary), StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
-        [Route("New")]
+        [Route("new")]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
         {
             if (!ModelState.IsValid) return ValidationProblem(ModelState);
@@ -60,7 +60,7 @@ namespace Blog_DevIO.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary), StatusCodes.Status400BadRequest)]
-        [Route("Enter")]
+        [Route("enter")]
         public async Task<IActionResult> Login(LoginUserViewModel loginUser)
         {
             if (!ModelState.IsValid) return ValidationProblem(ModelState);
