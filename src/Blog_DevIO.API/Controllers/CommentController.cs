@@ -1,8 +1,8 @@
-﻿using Blog_DevIO.Domain.Entities;
+﻿using Blog_DevIO.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Blog_DevIO.Application.Services.Abstractions;
-using Blog_DevIO.Application.ViewModels.Comments;
+using Blog_DevIO.Core.Services.Abstractions;
+using Blog_DevIO.Core.ViewModels.Comments;
 using Microsoft.EntityFrameworkCore;
 
 namespace Blog_DevIO.API.Controllers
