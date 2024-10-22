@@ -1,6 +1,6 @@
 using Blog_DevIO.API.Configurations;
-using Blog_DevIO.Application.IoC;
-using Blog_DevIO.Data.IoC;
+using Blog_DevIO.Core.Data.Seed;
+using Blog_DevIO.Core.IoC;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +15,7 @@ builder.Services.AddHttpContextAccessor();
 builder
     .AddEF()
     .AddJwt()
-    .AddApplicationServices();
+    .AddServices();
 
 var app = builder.Build();
 
@@ -32,5 +32,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseDbMigrationHelper();
 
 app.Run();

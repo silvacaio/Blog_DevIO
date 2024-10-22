@@ -1,4 +1,4 @@
-using Blog_DevIO.Data.IoC;
+using Blog_DevIO.Core.IoC;
 
 var builder = WebApplication.CreateBuilder(args);
 

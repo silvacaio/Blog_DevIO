@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Blog_DevIO.Data;
-using Blog_DevIO.Domain.Entities;
-using Blog_DevIO.Application.ViewModels.Post;
+using Blog_DevIO.Core.Entities;
+using Blog_DevIO.Core.ViewModels.Post;
+using Blog_DevIO.Core.Data;
 
 namespace Blog_DevIO.Web.Controllers
 {
