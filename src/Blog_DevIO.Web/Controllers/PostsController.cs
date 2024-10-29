@@ -27,7 +27,7 @@ namespace Blog_DevIO.Web.Controllers
 
         public async Task<IActionResult> Details(Guid id)
         {
-            var post = await _postService.GetById(id);
+            var post = await _postService.GetPostWithCommentsAndAuthorById(id);
 
             if (post == null)
             {

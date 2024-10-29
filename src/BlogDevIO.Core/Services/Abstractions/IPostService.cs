@@ -7,7 +7,7 @@ namespace Blog_DevIO.Core.Services.Abstractions
     {
         public Task<IEnumerable<PostViewModel?>> Get();
         public Task<PostViewModel?> GetById(Guid id);
-        public Task<PostWithCommentsViewModel?> GetPostWithCommentsAndAuthorById(Guid id);
+        public Task<PostWithCommentsAndAuthorViewModel?> GetPostWithCommentsAndAuthorById(Guid id);
         Task<IEnumerable<Post?>> GetByUser();
         public Task Create(CreatePostViewModel post);
         Task<Post?> Update(EditPostViewModel comment);

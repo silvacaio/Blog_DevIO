@@ -37,15 +37,25 @@ namespace Blog_DevIO.Core.Services
 
             return CreatePostViewModel(post);
         }
-        public async Task<PostWithCommentsViewModel?> GetPostWithCommentsAndAuthorById(Guid id)
+
+        public async Task<PostWithCommentsAndAuthorViewModel?> GetPostWithCommentsAndAuthorById(Guid id)
         {
             var post = await _postRepository.Get(id);
             if (post == null)
                 return null;
 
-            return null; //TODO 
+            var canEdit = CanEditPost(post);
 
+            var postViewModel = PostWithCommentsAndAuthorViewModel.New(
+                post.Id,
+                post.Title,
+                post.Content,
+                post.Creation,
+                canEdit,
+                post.Author,
+                post.Comments);
 
+            return postViewModel;
         }
 
         public Task<IEnumerable<Post?>> GetByUser()
@@ -104,7 +114,5 @@ namespace Blog_DevIO.Core.Services
             var canEdit = CanEditPost(post);
             return PostViewModel.New(post.Id, post.Title, post.Content, post.Creation, canEdit);
         }
-
-
     }
 }
