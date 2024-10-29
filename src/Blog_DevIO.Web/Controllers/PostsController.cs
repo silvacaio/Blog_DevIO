@@ -1,36 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Blog_DevIO.Core.Entities;
 using Blog_DevIO.Core.ViewModels.Post;
-using Blog_DevIO.Core.Data;
+using Blog_DevIO.Core.Services.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Blog_DevIO.Web.Controllers
 {
+    [Route("posts")]
+
     public class PostsController : Controller
     {
-        private readonly BlogContext _context;
+        private readonly IPostService _postService;
 
-        public PostsController(BlogContext context)
+        public PostsController(IPostService postService)
         {
-            _context = context;
+            _postService = postService;
         }
 
         // GET: Posts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Post.ToListAsync());
+            return View(await _postService.Get());
         }
 
         // GET: Posts/Details/5
-        public async Task<IActionResult> Details(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        [HttpGet("details/{id:guid}")]
 
-            var post = await _context.Post
-                .FirstOrDefaultAsync(m => m.Id == id);
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var post = await _postService.GetById(id);
+
             if (post == null)
             {
                 return NotFound();
@@ -50,106 +48,92 @@ namespace Blog_DevIO.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Content,Tags")] CreatePostViewModel post)
+        public async Task<IActionResult> Create(CreatePostViewModel post)
         {
-            if (ModelState.IsValid)
-            {
-                var newPost = new Post(post.Title, post.Content, "02174cf0–9412–4cfe-afbf-59f706d72cf6");
+            if (ModelState.IsValid == false)
+                return View(post);
 
-                _context.Add(newPost);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(post);
+            await _postService.Create(post);
+
+            return RedirectToAction(nameof(Index));
+
         }
 
         // GET: Posts/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        [HttpGet("edit/{id:guid}")]
+        public async Task<IActionResult> Edit(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var post = await _postService.GetById(id);
 
-            var post = await _context.Post.FindAsync(id);
             if (post == null)
             {
                 return NotFound();
             }
+
+            if (post.CanEdit == false)
+                return RedirectToAction("Index", "Error", new { statusCode = 403 });
+
+
             return View(post);
         }
 
         // POST: Posts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Title,Content,Tags,UserId,Id,Creation")] Post post)
+        public async Task<IActionResult> Edit(Guid id, EditPostViewModel postViewModel)
         {
-            if (id != post.Id)
-            {
+            if (id != postViewModel.Id)
                 return NotFound();
-            }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(post);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PostExists(post.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(post);
+            if (ModelState.IsValid == false)
+                return View(postViewModel);
+
+            var post = await _postService.GetById(postViewModel.Id);
+            if (post == null)
+                return NotFound();
+
+            if (post.CanEdit == false)
+                return RedirectToAction("Index", "Error", new { statusCode = 403 });
+
+            await _postService.Update(postViewModel);
+
+            return RedirectToAction("Index");
         }
 
         // GET: Posts/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        [Authorize, HttpGet("delete/{id:guid}")]
 
-            var post = await _context.Post
-                .FirstOrDefaultAsync(m => m.Id == id);
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var post = await _postService.GetById(id);
+
             if (post == null)
-            {
                 return NotFound();
-            }
+
+            if (post.CanEdit == false)
+                return RedirectToAction("Index", "Error", new { statusCode = 403 });
 
             return View(post);
         }
 
         // POST: Posts/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [Authorize, HttpPost("delete/{id:guid}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var post = await _context.Post.FindAsync(id);
-            if (post != null)
-            {
-                _context.Post.Remove(post);
-            }
+            var post = await _postService.GetById(id);
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            if (post == null)
+                return NotFound();
 
-        private bool PostExists(Guid id)
-        {
-            return _context.Post.Any(e => e.Id == id);
+            if (post.CanEdit == false)
+                return RedirectToAction("Index", "Error", new { statusCode = 403 });
+
+            await _postService.Delete(id);
+
+            return RedirectToAction("Index");
         }
     }
 }

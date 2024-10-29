@@ -10,7 +10,7 @@ namespace Blog_DevIO.Data.Configurations
         {
             builder.ToTable("Posts");
             builder.HasKey(p => p.Id);
-            builder.Property(p => p.UserId).IsRequired();
+            builder.Property(p => p.AuthorId).IsRequired();
             builder.Property(p => p.Id).HasColumnType("varchar(100)").IsRequired();
             builder.Property(p => p.Content).HasColumnType("BLOB").IsRequired();
             builder.Property(p => p.Creation).HasDefaultValueSql("getdate()").ValueGeneratedOnAdd();
@@ -19,7 +19,7 @@ namespace Blog_DevIO.Data.Configurations
             .WithOne(p => p.Post)
             .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(p => p.User)
+            builder.HasOne(p => p.Author)
                 .WithMany(p => p.Posts)
                 .OnDelete(DeleteBehavior.NoAction);
         }

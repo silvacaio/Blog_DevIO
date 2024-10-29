@@ -1,4 +1,5 @@
 ﻿using Blog_DevIO.Core.Entities;
+using Blog_DevIO.Core.Services.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -40,7 +41,7 @@ namespace Blog_DevIO.Core.Data.Seed
 
         private static async Task EnsureSeedData(BlogContext context)
         {
-            if (context.Post.Any() || context.Users.Any()) return;
+            if (context.Posts.Any() || context.Users.Any()) return;
 
             #region ADMIN SEED
             string ADMIN_ROLE_ID = "341743f0-asd2–42de-afbf-59kmkkmk72cf6";
@@ -53,7 +54,7 @@ namespace Blog_DevIO.Core.Data.Seed
             });
 
             string ADMIN_ID = "02174cf0–9412–4cfe-afbf-59f706d72cf6";
-            var adminUser = new User("Caio", "Silva")
+            var adminUser = new IdentityUser
             {
                 Id = ADMIN_ID,
                 Email = "caiosilva@teste.com",
@@ -64,9 +65,12 @@ namespace Blog_DevIO.Core.Data.Seed
             };
 
             //set user password
-            PasswordHasher<User> ph = new PasswordHasher<User>();
+            PasswordHasher<IdentityUser> ph = new PasswordHasher<IdentityUser>();
             adminUser.PasswordHash = ph.HashPassword(adminUser, "Teste@123");
             await context.Users.AddAsync(adminUser);
+
+            var author = new Author(Guid.Parse(adminUser.Id), "Caio", "Silva");
+            await context.Authors.AddAsync(author);
 
             await context.UserRoles.AddAsync(new IdentityUserRole<string>
             {
@@ -88,7 +92,7 @@ namespace Blog_DevIO.Core.Data.Seed
             });
 
             string USER_ID = "eb430f77-8705-454d-b9b3-2a2e3081610d";
-            var user = new User("User", "Teste")
+            var user = new IdentityUser
             {
                 Id = USER_ID,
                 Email = "blog@teste.com",
@@ -99,9 +103,12 @@ namespace Blog_DevIO.Core.Data.Seed
             };
 
             //set user password
-            ph = new PasswordHasher<User>();
+            ph = new PasswordHasher<IdentityUser>();
             user.PasswordHash = ph.HashPassword(user, "Teste@123");
             await context.Users.AddAsync(user);
+
+            var author2 = new Author(Guid.Parse(user.Id), "User", "Teste");
+            await context.Authors.AddAsync(author2);
 
             await context.UserRoles.AddAsync(new IdentityUserRole<string>
             {

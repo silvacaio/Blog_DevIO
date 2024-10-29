@@ -28,6 +28,7 @@ namespace Blog_DevIO.Core.IoC
 
             builder.Services.AddScoped<IPostRepository, PostRepository>();
             builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+            builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 
 
             return builder;
@@ -36,8 +37,9 @@ namespace Blog_DevIO.Core.IoC
         public static WebApplicationBuilder AddServices(this WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<IPostService, PostService>();
-            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IAppUserService, AppUserService>();
             builder.Services.AddScoped<ICommentService, CommentService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             return builder;
         }

@@ -1,6 +1,6 @@
 ﻿@model Blog_DevIO.Core.ViewModels.Post.CreatePostViewModel
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "New Post";
 }
 
 <h1>Create</h1>
@@ -22,11 +22,6 @@
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Tags" class="control-label"></label>
-                <input asp-for="Tags" class="form-control" />
-                <span asp-validation-for="Tags" class="text-danger"></span>
-            </div>          
-            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -38,5 +33,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

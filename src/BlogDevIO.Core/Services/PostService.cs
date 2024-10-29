@@ -7,33 +7,57 @@ namespace Blog_DevIO.Core.Services
     public class PostService : IPostService
     {
         private readonly IPostRepository _postRepository;
-        private readonly IUserService _userService;
-        public PostService(IPostRepository postRepository, IUserService userService)
+        private readonly IAppUserService _userService;
+        public PostService(IPostRepository postRepository, IAppUserService userService)
         {
             _postRepository = postRepository;
             _userService = userService;
         }
 
-        public async Task<IEnumerable<Post?>> Get()
+        public async Task<IEnumerable<PostViewModel?>> Get()
         {
-            return await _postRepository.GetAll();
+            var posts = await _postRepository.GetAll();
+            if (posts == null)
+                return Enumerable.Empty<PostViewModel>();
+
+            var postsView = new List<PostViewModel>();
+            foreach (var post in posts)
+            {
+                postsView.Add(CreatePostViewModel(post));
+            }
+
+            return postsView;
         }
 
-        public async Task<Post?> GetById(Guid id)
+        public async Task<PostViewModel?> GetById(Guid id)
         {
-            return await _postRepository.Get(id);
+            var post = await _postRepository.Get(id);
+            if (post == null)
+                return null;
+
+            return CreatePostViewModel(post);
+        }
+        public async Task<PostWithCommentsViewModel?> GetPostWithCommentsAndAuthorById(Guid id)
+        {
+            var post = await _postRepository.Get(id);
+            if (post == null)
+                return null;
+
+            return null; //TODO 
+
+
         }
 
         public Task<IEnumerable<Post?>> GetByUser()
         {
             var userId = _userService.GetId();
-            return _postRepository.GetByUser(userId);
+            return _postRepository.GetByUser(Guid.Parse(userId));
         }
 
         public async Task Create(CreatePostViewModel post)
         {
             var userId = _userService.GetId();
-            var newPost = new Post(post.Title, post.Content, userId);
+            var newPost = new Post(post.Title, post.Content, Guid.Parse(userId));
             await _postRepository.Save(newPost);
         }
 
@@ -43,7 +67,7 @@ namespace Blog_DevIO.Core.Services
             if (postToAction == null)
                 return null;
 
-            var newPost = new Post(post.Id, post.Title, post.Content, postToAction.UserId);
+            var newPost = new Post(post.Id, post.Title, post.Content, postToAction.AuthorId);
             await _postRepository.Update(newPost);
 
             return newPost;
@@ -58,16 +82,29 @@ namespace Blog_DevIO.Core.Services
             await _postRepository.Delete(postToAction);
         }
 
-        public async Task<Post?> GetPostToAction(Guid postId)
+        public async Task<Post?> GetPostToAction(Guid id)
         {
-            var postToEdit = await GetById(postId);
+            var postToEdit = await _postRepository.Get(id);
             if (postToEdit == null)
                 return null;
 
-            if (_userService.IsAdmin() == false || _userService.GetId() != postToEdit.UserId)
+            if (CanEditPost(postToEdit) == false)
                 return null;
 
             return postToEdit;
         }
+
+        private bool CanEditPost(Post post)
+        {
+            return _userService.IsAdmin() == true || _userService.GetId() == post.AuthorId.ToString();
+        }
+
+        private PostViewModel CreatePostViewModel(Post post)
+        {
+            var canEdit = CanEditPost(post);
+            return PostViewModel.New(post.Id, post.Title, post.Content, post.Creation, canEdit);
+        }
+
+
     }
 }

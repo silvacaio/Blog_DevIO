@@ -4,20 +4,20 @@ namespace Blog_DevIO.Core.Entities
 {
     public class Post : EntityBase
     {
-        public Post(Guid id, string title, string content, string userId)
+        public Post(Guid id, string title, string content, Guid authorId)
             : base(id)
         {
             Title = title;
             Content = content;
-            UserId = userId;
+            AuthorId = authorId;
         }
 
-        public Post(string title, string content, string userId)
+        public Post(string title, string content, Guid authorId)
             : base()
         {
             Title = title;
             Content = content;
-            UserId = userId;
+            AuthorId = authorId;
         }
 
         // Empty constructor for EF
@@ -25,12 +25,11 @@ namespace Blog_DevIO.Core.Entities
 
         public string Title { get; private set; }
         public string Content { get; private set; }
-        public string[]? Tags { get; private set; }
 
         #region EF
         public ICollection<Comment> Comments { get; }
-        public string UserId { get; private set; }
-        public User User { get; private set; }
+        public Guid AuthorId { get; set; }
+        public Author Author { get; set; }
         #endregion
     }
 }

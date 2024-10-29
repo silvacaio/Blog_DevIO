@@ -16,7 +16,5 @@ namespace Blog_DevIO.Core.ViewModels.Post
         [DataType(DataType.MultilineText)]
         [MinLength(10)]
         public string Content { get; private set; }
-
-        public string[]? Tags { get; private set; }
     }
 }

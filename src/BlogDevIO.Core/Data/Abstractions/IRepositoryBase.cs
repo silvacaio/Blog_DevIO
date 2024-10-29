@@ -8,6 +8,6 @@ namespace Blog_DevIO.Core.Data.Abstractions
         public Task Update(T entity);
         public Task Delete(T entity);
         public Task<T?> Get(Guid id);
-        public Task<IEnumerable<T?>> GetAll();
+        public Task<IEnumerable<T>?> GetAll();
     }
 }
