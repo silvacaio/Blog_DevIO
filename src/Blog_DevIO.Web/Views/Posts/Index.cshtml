@@ -4,9 +4,12 @@
     ViewData["Title"] = "Index";
 }
 
-<p>
-    <div class="d-flex justify-content-end mb-4"><a asp-action="Create" class="btn btn-primary text-uppercase">Create New</a></div>
-</p>
+@if (User.Identity.IsAuthenticated)
+{
+    <p>
+        <div class="d-flex justify-content-end mb-4"><a asp-action="Create" class="btn btn-primary text-uppercase">Create New</a></div>
+    </p>
+}
 
 
 <div class="container px-4 px-lg-5">
