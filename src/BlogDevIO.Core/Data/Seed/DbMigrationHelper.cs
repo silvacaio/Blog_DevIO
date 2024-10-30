@@ -1,4 +1,5 @@
 ﻿using Blog_DevIO.Core.Entities;
+using Blog_DevIO.Core.Services.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -40,10 +41,10 @@ namespace Blog_DevIO.Core.Data.Seed
 
         private static async Task EnsureSeedData(BlogContext context)
         {
-            if (context.Post.Any() || context.Users.Any()) return;
+            if (context.Posts.Any() || context.Users.Any()) return;
 
             #region ADMIN SEED
-            string ADMIN_ROLE_ID = "341743f0-asd2–42de-afbf-59kmkkmk72cf6";
+            string ADMIN_ROLE_ID = Guid.NewGuid().ToString();
             await context.Roles.AddAsync(new IdentityRole
             {
                 Name = "SuperAdmin",
@@ -52,8 +53,8 @@ namespace Blog_DevIO.Core.Data.Seed
                 ConcurrencyStamp = ADMIN_ROLE_ID
             });
 
-            string ADMIN_ID = "02174cf0–9412–4cfe-afbf-59f706d72cf6";
-            var adminUser = new User("Caio", "Silva")
+            string ADMIN_ID = Guid.NewGuid().ToString();
+            var adminUser = new IdentityUser
             {
                 Id = ADMIN_ID,
                 Email = "caiosilva@teste.com",
@@ -64,9 +65,12 @@ namespace Blog_DevIO.Core.Data.Seed
             };
 
             //set user password
-            PasswordHasher<User> ph = new PasswordHasher<User>();
+            PasswordHasher<IdentityUser> ph = new PasswordHasher<IdentityUser>();
             adminUser.PasswordHash = ph.HashPassword(adminUser, "Teste@123");
             await context.Users.AddAsync(adminUser);
+
+            var author = new Author(Guid.Parse(adminUser.Id), "Caio", "Silva");
+            await context.Authors.AddAsync(author);
 
             await context.UserRoles.AddAsync(new IdentityUserRole<string>
             {
@@ -78,7 +82,7 @@ namespace Blog_DevIO.Core.Data.Seed
             #endregion
 
             #region USER SEED
-            string ROLE_ID = "048a44ed-981e-4cdf-b79f-d4b473158362";
+            string ROLE_ID = Guid.NewGuid().ToString();
             await context.Roles.AddAsync(new IdentityRole
             {
                 Name = "BlogUser",
@@ -87,8 +91,8 @@ namespace Blog_DevIO.Core.Data.Seed
                 ConcurrencyStamp = ROLE_ID
             });
 
-            string USER_ID = "eb430f77-8705-454d-b9b3-2a2e3081610d";
-            var user = new User("User", "Teste")
+            string USER_ID = Guid.NewGuid().ToString();
+            var user = new IdentityUser
             {
                 Id = USER_ID,
                 Email = "blog@teste.com",
@@ -99,9 +103,12 @@ namespace Blog_DevIO.Core.Data.Seed
             };
 
             //set user password
-            ph = new PasswordHasher<User>();
+            ph = new PasswordHasher<IdentityUser>();
             user.PasswordHash = ph.HashPassword(user, "Teste@123");
             await context.Users.AddAsync(user);
+
+            var author2 = new Author(Guid.Parse(user.Id), "User", "Teste");
+            await context.Authors.AddAsync(author2);
 
             await context.UserRoles.AddAsync(new IdentityUserRole<string>
             {
@@ -109,6 +116,26 @@ namespace Blog_DevIO.Core.Data.Seed
                 UserId = USER_ID
             });
 
+
+            #endregion
+
+            #region POST SEED         
+
+            var post = new Post("Test Post",
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean justo enim, ullamcorper sed erat mattis, hendrerit maximus neque. Phasellus pharetra euismod metus, ut mattis lectus. Pellentesque tempus, ligula bibendum feugiat rhoncus, turpis nisi dapibus metus, et elementum ipsum orci eu nibh. Curabitur congue ut sem et bibendum. Phasellus luctus tortor vitae erat sodales vulputate. Ut ut ante ac mi consequat sollicitudin quis ut nisl. Sed et nibh a metus dignissim dapibus ut ut nisl.\r\n\r\nPellentesque eget lobortis erat, non commodo tortor. Vivamus blandit vitae erat sed sollicitudin. Mauris faucibus ut metus vel lobortis. Vivamus lacus ex, tincidunt vitae lectus id, mattis venenatis nibh. Etiam ullamcorper ipsum quis quam consequat tincidunt et eget turpis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Phasellus condimentum augue ipsum, vel pulvinar elit auctor quis. Phasellus mollis, lacus at vestibulum facilisis, tortor ex posuere ipsum, ut tincidunt arcu quam ac lorem. Nunc sit amet elementum velit. Aliquam condimentum, elit nec dignissim laoreet, diam felis sagittis est, et bibendum ex nisi fermentum nulla. Cras nec tempus dolor. Ut eleifend aliquam nisl, et imperdiet arcu. Sed accumsan felis commodo est venenatis porta. Nunc facilisis mauris tortor, et blandit eros maximus vehicula. Cras hendrerit libero et odio elementum aliquam.",
+                author2.Id);
+
+            await context.Posts.AddAsync(post);
+
+            #endregion
+
+            #region COMMENT SEED         
+
+            var comment = new Comment("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean justo enim, ullamcorper sed erat mattis, hendrerit maximus neque. Phasellus pharetra euismod metus, ut mattis lectus. Pellentesque tempus, ligula bibendum feugiat rhoncus, turpis nisi dapibus metus, et elementum ipsum orci eu nibh. Curabitur congue ut sem et bibendum. Phasellus luctus tortor vitae erat sodales vulputate. Ut ut ante ac mi consequat sollicitudin quis ut nisl. Sed et nibh a metus dignissim dapibus ut ut nisl.\r\n\r\nPellentesque eget lobortis erat, non commodo tortor. Vivamus blandit vitae erat sed sollicitudin. Mauris faucibus ut metus vel lobortis. Vivamus lacus ex, tincidunt vitae lectus id, mattis venenatis nibh. Etiam ullamcorper ipsum quis quam consequat tincidunt et eget turpis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Phasellus condimentum augue ipsum, vel pulvinar elit auctor quis. Phasellus mollis, lacus at vestibulum facilisis, tortor ex posuere ipsum, ut tincidunt arcu quam ac lorem. Nunc sit amet elementum velit. Aliquam condimentum, elit nec dignissim laoreet, diam felis sagittis est, et bibendum ex nisi fermentum nulla. Cras nec tempus dolor. Ut eleifend aliquam nisl, et imperdiet arcu. Sed accumsan felis commodo est venenatis porta. Nunc facilisis mauris tortor, et blandit eros maximus vehicula. Cras hendrerit libero et odio elementum aliquam.",
+                post.Id,
+                author.Id);
+
+            await context.Comments.AddAsync(comment);
 
             #endregion
 

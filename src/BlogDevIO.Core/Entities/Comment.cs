@@ -2,30 +2,34 @@
 {
     public class Comment : EntityBase
     {
-        public Comment(Guid id, string content, string postId, string userId)
+        public Comment(Guid id, string content, Guid postId, Guid authorId)
            : base(id)
         {
             Content = content;
+            PostId = postId;
+            AuthorId = authorId;
         }
 
-        public Comment(string content, string postId, string userId)
+        public Comment(string content, Guid postId, Guid authorId)
             : base()
         {
             Content = content;
+            PostId = postId;
+            AuthorId = authorId;
         }
 
         // Empty constructor for EF
         protected Comment() { }
 
-        public string Content { get; set; }
+        public string Content { get; private set; }
 
         #region EF
         public Guid PostId { get; set; }
         public Post Post { get; set; }
 
-        public string UserId { get; set; }
+        public Guid AuthorId { get; set; }
 
-        public User User { get; private set; }
+        public Author Author { get; set; }
 
         #endregion
     }

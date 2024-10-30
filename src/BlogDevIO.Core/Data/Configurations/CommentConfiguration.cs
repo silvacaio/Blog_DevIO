@@ -10,15 +10,15 @@ namespace Blog_DevIO.Data.Configurations
         {
             builder.ToTable("Comments");
             builder.HasKey(p => p.Id);
-            builder.Property(p => p.UserId).IsRequired();
+            builder.Property(p => p.AuthorId).IsRequired();
             builder.Property(p => p.Content).HasColumnType("BLOB").IsRequired();
-            builder.Property(p => p.Creation).HasDefaultValueSql("getdate()").ValueGeneratedOnAdd();
+            builder.Property(p => p.Creation).IsRequired();
 
             builder.HasOne(p => p.Post)
                     .WithMany(p => p.Comments)
                     .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(p => p.User)
+            builder.HasOne(p => p.Author)
                 .WithMany(p => p.Comments)
                 .OnDelete(DeleteBehavior.NoAction);
         }

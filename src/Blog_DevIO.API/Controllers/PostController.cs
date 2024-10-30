@@ -13,8 +13,8 @@ namespace Blog_DevIO.API.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
-        private readonly IUserService _userService;
-        public PostController(IPostService postService, IUserService userService)
+        private readonly IAppUserService _userService;
+        public PostController(IPostService postService, IAppUserService userService)
         {
             _postService = postService;
             _userService = userService;

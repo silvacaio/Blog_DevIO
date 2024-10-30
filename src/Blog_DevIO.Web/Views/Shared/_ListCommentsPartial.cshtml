@@ -1,0 +1,12 @@
+﻿@model IEnumerable<Blog_DevIO.Core.Entities.Comment>
+
+@foreach (var item in Model)
+{
+    <!-- Single comment-->
+    <div class="d-flex">
+        <div class="ms-3">
+            <div class="fw-bold">@item.Author.FistName</div>
+            @item.Content
+        </div>
+    </div>
+}

@@ -44,14 +44,11 @@ namespace Blog_DevIO.API.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
-            if (result.Succeeded)
-            {
-                await _signInManager.SignInAsync(user, false);
-                return Ok(await GetJwt(user.Email));
-            }
+            if (result.Succeeded == false)
+                return BadRequest(result.Errors);
 
-
-            return BadRequest(result.Errors);
+            await _signInManager.SignInAsync(user, false);
+            return Ok(await GetJwt(user.Email));
         }
 
 
@@ -85,7 +82,7 @@ namespace Blog_DevIO.API.Controllers
             userClaims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
             userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
             userClaims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
-            userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));            
+            userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
 
             var roles = await _userManager.GetRolesAsync(user);
             foreach (var role in roles)

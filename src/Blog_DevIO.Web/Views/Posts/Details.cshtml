@@ -1,48 +1,64 @@
-﻿@model Blog_DevIO.Core.Entities.Post
+﻿@model Blog_DevIO.Core.ViewModels.Post.PostWithCommentsAndAuthorViewModel
+@using Blog_DevIO.Core.ViewModels.Comments
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<!-- Page Header-->
+<header class="masthead" style="background-image: url('assets/img/post-bg.jpg')">
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-heading">
+                    <h1>@Model.Title</h1>
+                    <span class="meta">
+                        Posted by
+                        <a href="#!">@Model.Author.FistName @Model.Author.LastName</a>
+                        on @Model.Creation.ToString("MMMM dd, yyyy", new System.Globalization.CultureInfo("en-US"))
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<br />
+<!-- Post Content-->
+<article class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <p> @Model.Content</p>
+            </div>
+        </div>
+    </div>
+</article>
 
-<div>
-    <h4>Post</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Content)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tags)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tags)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Creation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Creation)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+@if (Model.CanEdit)
+{
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="d-flex justify-content-end col-md-5"><a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary text-uppercase">Edit</a></div>
+        <div class="d-flex justify-content-end col-md-1"><a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-danger text-uppercase">Delete</a></div>
+    </div>
+}
+
+<div class="card-body">
+    <h4 class="mb-4">Comments</h4>
+    <!-- Comments section-->
+    <section class="mb-5">
+        <div class="card bg-light">
+            <div class="card-body">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <partial name="_NewCommentPartial" model="new CreateCommentViewModel { PostId = Model.Id }" />
+                }
+                <partial name="_ListCommentsPartial" model="Model.Comments" />
+            </div>
+        </div>
+    </section>
+</div>    
+
+
+<div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="d-flex justify-content-end"><a asp-action="Index" class="btn btn-primary text-uppercase">Back to List</a></div>
 </div>

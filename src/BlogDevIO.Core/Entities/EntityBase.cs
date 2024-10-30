@@ -14,5 +14,6 @@
 
         public Guid Id { get; private set; }
         public DateTime Creation { get; private set; }
+        public bool IsDeleted { get; set; }
     }
 }

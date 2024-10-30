@@ -1,52 +1,39 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
+﻿using Blog_DevIO.Core.Data.Abstractions;
+using Blog_DevIO.Core.Entities;
+using Blog_DevIO.Core.Services.Abstractions;
+using Blog_DevIO.Core.ViewModels.Users;
+using Microsoft.AspNetCore.Identity;
 
-namespace Blog_DevIO.Core.Services.Abstractions
+namespace Blog_DevIO.Core.Services
 {
     public class UserService : IUserService
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserManager<IdentityUser> _userManager;
+        private IAuthorRepository _authorRepository;
 
-        public UserService(IHttpContextAccessor httpContextAccessor)
+        public UserService(UserManager<IdentityUser> userManager, IAuthorRepository authorRepository)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _userManager = userManager;
+            _authorRepository = authorRepository;
         }
 
-        public string? GetId()
+        public async Task<IdentityResult> Create(RegisterViewModel model)
         {
-            if (IsAuthenticated() == false)
-                return string.Empty;
+            var user = new IdentityUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                EmailConfirmed = true
+            };
 
-            return _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        }
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded == false)
+                return result;
 
-        public bool IsAdmin()
-        {
-            if (IsAuthenticated() == false)
-                return false;
+            var author = new Author(Guid.Parse(user.Id), model.FistName, model.LastName);
 
-            return _httpContextAccessor.HttpContext?.User?.IsInRole("SuperAdmin") ?? false;
-        }
-
-        public bool IsAuthenticated()
-        {
-            return _httpContextAccessor.HttpContext?.User.Identity is { IsAuthenticated: true };
-        }
-
-        public bool IsLoggedUser(string userId)
-        {
-            if (string.IsNullOrWhiteSpace(userId) == true)
-                return false;
-
-            return userId == GetId();
-        }
-
-        public bool IsOwnerOrAdmin(string userId)
-        {
-            if (IsAdmin() == true)
-                return true;
-
-            return IsOwnerOrAdmin(userId);
+            await _authorRepository.Save(author);
+            return result;
         }
     }
 }

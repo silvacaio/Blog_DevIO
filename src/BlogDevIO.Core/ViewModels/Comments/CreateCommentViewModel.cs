@@ -9,10 +9,10 @@ namespace Blog_DevIO.Core.ViewModels.Comments
         [DisplayName("Content")]
         [DataType(DataType.MultilineText)]
         [MinLength(10)]
-        public string Content { get; private set; }
+        public string Content { get; set; }
 
         [Required(ErrorMessage = "The Post is Required")]
         [DisplayName("Post")]
-        public string PostId { get; private set; }
+        public string PostId { get; set; }
     }
 }
