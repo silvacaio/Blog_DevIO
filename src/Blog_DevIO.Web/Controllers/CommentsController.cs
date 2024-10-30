@@ -1,42 +1,37 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Blog_DevIO.Core.Services.Abstractions;
+using Blog_DevIO.Core.ViewModels.Comments;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Blog_DevIO.Web.Controllers
 {
     [Route("comments")]
-
     public class CommentsController : Controller
     {
-        // GET: Comments
-        public ActionResult Index()
-        {
-            return View();
-        }
+        private readonly IPostService _postService;
 
-        // GET: Comments/Details/5
-        public ActionResult Details(int id)
+        public CommentsController(IPostService postService)
         {
-            return View();
-        }
-
-        // GET: Comments/Create
-        public ActionResult Create()
-        {
-            return View();
+            _postService = postService;
         }
 
         // POST: Comments/Create
-        [HttpPost]
+        [HttpPost("create")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(CreateCommentViewModel comentarioViewModel)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                return PartialView("_NewCommentPartial", comentarioViewModel);
             }
-            catch
-            {
-                return View();
-            }
+
+            var postId = Guid.Parse(comentarioViewModel.PostId);
+            var post = await _postService.GetById(postId);
+
+            if (post == null) return NotFound();
+
+            await _postService.CommentService.Create(comentarioViewModel);
+
+            return PartialView("_ListCommentsPartial", _postService.CommentService.GetByPostId(postId));
         }
 
         // GET: Comments/Edit/5

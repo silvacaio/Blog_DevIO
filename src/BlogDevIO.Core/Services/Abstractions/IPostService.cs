@@ -13,5 +13,7 @@ namespace Blog_DevIO.Core.Services.Abstractions
         Task<Post?> Update(EditPostViewModel comment);
         public Task Delete(Guid id);
         Task<Post?> GetPostToAction(Guid id);
+
+        ICommentService CommentService { get; }
     }
 }

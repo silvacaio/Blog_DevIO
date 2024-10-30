@@ -8,10 +8,14 @@ namespace Blog_DevIO.Core.Services
     {
         private readonly IPostRepository _postRepository;
         private readonly IAppUserService _userService;
-        public PostService(IPostRepository postRepository, IAppUserService userService)
+        private readonly ICommentService _commentService;
+        public ICommentService CommentService => _commentService;
+
+        public PostService(IPostRepository postRepository, IAppUserService userService, ICommentService commentService)
         {
             _postRepository = postRepository;
             _userService = userService;
+            _commentService = commentService;
         }
 
         public async Task<IEnumerable<PostViewModel?>> Get()
