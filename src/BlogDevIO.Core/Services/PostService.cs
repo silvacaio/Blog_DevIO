@@ -40,7 +40,7 @@ namespace Blog_DevIO.Core.Services
 
         public async Task<PostWithCommentsAndAuthorViewModel?> GetPostWithCommentsAndAuthorById(Guid id)
         {
-            var post = await _postRepository.Get(id);
+            var post = await _postRepository.Get(id, true, true);
             if (post == null)
                 return null;
 

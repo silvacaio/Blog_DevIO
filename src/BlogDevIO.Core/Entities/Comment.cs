@@ -2,16 +2,20 @@
 {
     public class Comment : EntityBase
     {
-        public Comment(Guid id, string content, string postId, Guid authorId)
+        public Comment(Guid id, string content, Guid postId, Guid authorId)
            : base(id)
         {
             Content = content;
+            PostId = postId;
+            AuthorId = authorId;
         }
 
-        public Comment(string content, string postId, Guid authorId)
+        public Comment(string content, Guid postId, Guid authorId)
             : base()
         {
             Content = content;
+            PostId = postId;
+            AuthorId = authorId;
         }
 
         // Empty constructor for EF

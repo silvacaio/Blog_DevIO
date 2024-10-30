@@ -2,27 +2,29 @@
 
 namespace Blog_DevIO.Web.Controllers
 {
+    [Route("comments")]
+
     public class CommentsController : Controller
     {
-        // GET: CommentsController
+        // GET: Comments
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: CommentsController/Details/5
+        // GET: Comments/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: CommentsController/Create
+        // GET: Comments/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: CommentsController/Create
+        // POST: Comments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -37,13 +39,13 @@ namespace Blog_DevIO.Web.Controllers
             }
         }
 
-        // GET: CommentsController/Edit/5
+        // GET: Comments/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: CommentsController/Edit/5
+        // POST: Comments/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -58,13 +60,13 @@ namespace Blog_DevIO.Web.Controllers
             }
         }
 
-        // GET: CommentsController/Delete/5
+        // GET: Comments/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: CommentsController/Delete/5
+        // POST: Comments/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

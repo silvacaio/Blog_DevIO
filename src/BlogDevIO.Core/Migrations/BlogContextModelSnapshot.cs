@@ -24,13 +24,14 @@ namespace Blog_DevIO.Core.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<DateTime>("Creation")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FistName")
                         .IsRequired()
                         .HasColumnType("varchar(100)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -55,9 +56,10 @@ namespace Blog_DevIO.Core.Migrations
                         .HasColumnType("BLOB");
 
                     b.Property<DateTime>("Creation")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("PostId")
                         .HasColumnType("varchar(100)");
@@ -85,9 +87,10 @@ namespace Blog_DevIO.Core.Migrations
                         .HasColumnType("BLOB");
 
                     b.Property<DateTime>("Creation")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .IsRequired()

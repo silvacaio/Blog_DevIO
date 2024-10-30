@@ -1,6 +1,7 @@
 ﻿using Blog_DevIO.Core.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Blog_DevIO.Core.Data
 {
@@ -16,6 +17,43 @@ namespace Blog_DevIO.Core.Data
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(BlogContext).Assembly);
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            bool hasProperty(string propertyName, EntityEntry entry) => entry.Entity.GetType().GetProperty(propertyName) != null;
+
+            foreach (var entry in ChangeTracker.Entries())
+            {
+
+                switch (entry.State)
+                {
+                    case EntityState.Deleted:
+                        if (hasProperty("IsDeleted", entry))
+                        {
+                            entry.Property("IsDeleted").CurrentValue = true;
+                            entry.State = EntityState.Modified;
+                        }
+                        break;
+
+                    case EntityState.Modified:
+                        if (hasProperty("Creation", entry))
+                            entry.Property("Creation").IsModified = false;
+                        break;
+
+                    case EntityState.Added:
+                        if (hasProperty("Creation", entry))
+                            entry.Property("Creation").CurrentValue = DateTime.Now;
+                        break;
+
+                    case EntityState.Unchanged:
+                    case EntityState.Detached:
+                    default:
+                        break;
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
         }
 
 

@@ -16,29 +16,34 @@ namespace Blog_DevIO.Data.Repositories
             return await DbSet.Where(p => p.AuthorId == authorId).ToListAsync();
         }
 
-        public async Task<Post?> GetById(Guid id, bool includeComments, bool includeAuthor)
+        public async Task<Post?> Get(Guid id, bool includeComments, bool includeAuthor)
         {
+            var query = DbSet.AsNoTracking();
+
             if (includeAuthor)
-                DbSet.Include(a => a.Author);
+                query = query.Include(a => a.Author);
 
             if (includeComments)
-                DbSet.Include(a => a.Comments)
+                query = query.Include(a => a.Comments)
                 .ThenInclude(a => a.Author);
 
 
-            return await DbSet.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+            return await query.FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<IEnumerable<Post?>> GetAll(bool includeComments, bool includeAuthor)
         {
+            var query = DbSet.AsNoTracking();
+
             if (includeAuthor)
-                DbSet.Include(a => a.Author);
+                query = query.Include(a => a.Author);
 
             if (includeComments)
-                DbSet.Include(a => a.Comments)
+                query = query.Include(a => a.Comments)
                 .ThenInclude(a => a.Author);
 
-            return await DbSet.AsNoTracking().OrderByDescending(p => p.Creation)
+
+            return await query.OrderByDescending(p => p.Creation)
                                 .ToListAsync();
         }
     }

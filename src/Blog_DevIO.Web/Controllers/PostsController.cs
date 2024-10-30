@@ -38,6 +38,7 @@ namespace Blog_DevIO.Web.Controllers
         }
 
         // GET: Posts/Create
+        [HttpGet("create")]
         public IActionResult Create()
         {
             return View();

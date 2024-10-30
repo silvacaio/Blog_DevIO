@@ -13,7 +13,7 @@ namespace Blog_DevIO.Data.Configurations
             builder.Property(p => p.AuthorId).IsRequired();
             builder.Property(p => p.Id).HasColumnType("varchar(100)").IsRequired();
             builder.Property(p => p.Content).HasColumnType("BLOB").IsRequired();
-            builder.Property(p => p.Creation).HasDefaultValueSql("getdate()").ValueGeneratedOnAdd();
+            builder.Property(p => p.Creation).IsRequired();
 
             builder.HasMany(p => p.Comments)
             .WithOne(p => p.Post)

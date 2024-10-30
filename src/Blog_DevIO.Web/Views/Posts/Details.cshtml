@@ -38,18 +38,8 @@
     }
 </div>
 
-<div>
-    <div class="card-body">
-        <h4 class="mb-4">Comments</h4>
-        <partial name="_ComentarioListPartial" model="Model.Comments" />
-        <hr />
-        <h5 class="mb-3">Create a new comment:</h5>
-        @* <partial name="_ComentarioFormPartial" model="new ComentViewModel { PostId = Model.Id }" /> *@
-    </div>
-</div>
-
+ 
 
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-<partial name="_ModalPartial" />

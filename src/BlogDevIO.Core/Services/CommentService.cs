@@ -32,7 +32,7 @@ namespace Blog_DevIO.Core.Services
         public async Task Create(CreateCommentViewModel comment)
         {
             var userId = _userService.GetId();
-            var newComment = new Comment(comment.Content, comment.PostId, Guid.Parse(userId));
+            var newComment = new Comment(comment.Content, Guid.Parse(comment.PostId), Guid.Parse(userId));
             await _commentRepository.Save(newComment);
         }
 
@@ -42,7 +42,7 @@ namespace Blog_DevIO.Core.Services
             if (commentToAction == null)
                 return null;
 
-            var newComment = new Comment(comment.Id, comment.Content, comment.PostId, commentToAction.AuthorId);
+            var newComment = new Comment(comment.Id, comment.Content, Guid.Parse(comment.PostId), commentToAction.AuthorId);
             await _commentRepository.Update(newComment);
             return newComment;
         }
