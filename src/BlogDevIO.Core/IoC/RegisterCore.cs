@@ -18,7 +18,7 @@ namespace Blog_DevIO.Core.IoC
             builder.Services.AddDbContext<BlogContext>(options =>
               options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                  .AddRoles<IdentityRole>()
                  .AddEntityFrameworkStores<BlogContext>()
                   .AddSignInManager()

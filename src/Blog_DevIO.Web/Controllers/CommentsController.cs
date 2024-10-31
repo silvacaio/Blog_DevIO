@@ -24,14 +24,15 @@ namespace Blog_DevIO.Web.Controllers
                 return PartialView("_NewCommentPartial", comentarioViewModel);
             }
 
-            var postId = Guid.Parse(comentarioViewModel.PostId);
+            var postId = comentarioViewModel.PostId;
             var post = await _postService.GetById(postId);
 
             if (post == null) return NotFound();
 
             await _postService.CommentService.Create(comentarioViewModel);
 
-            return PartialView("_ListCommentsPartial", _postService.CommentService.GetByPostId(postId));
+            var comments = await _postService.CommentService.GetByPostId(postId);
+            return PartialView("_ListCommentsPartial", comments);
         }
 
         // GET: Comments/Edit/5

@@ -1,12 +1,14 @@
-﻿@model IEnumerable<Blog_DevIO.Core.Entities.Comment>
+﻿@model IEnumerable<Blog_DevIO.Core.ViewModels.Comments.CommentViewModel>
 
-@foreach (var item in Model)
-{
-    <!-- Single comment-->
-    <div class="d-flex">
-        <div class="ms-3">
-            <div class="fw-bold">@item.Author.FistName</div>
-            @item.Content
+<section id="list-comments" class="mt-2">
+    @foreach (var item in Model)
+    {
+        <!-- Single comment-->
+        <div class="d-flex">
+            <div class="ms-3">
+                <div class="fw-bold">@item.Author.FistName</div>
+                @item.Content
+            </div>
         </div>
-    </div>
-}
+    }
+</section>

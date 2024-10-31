@@ -60,8 +60,8 @@ namespace Blog_DevIO.Core.Data.Seed
                 Email = "caiosilva@teste.com",
                 EmailConfirmed = true,
                 UserName = "caiosilva@teste.com",
-                NormalizedUserName = "caiosilva@teste.com",
-                NormalizedEmail = "caiosilva@teste.com"
+                NormalizedUserName = "caiosilva@teste.com".ToUpper(),
+                NormalizedEmail = "caiosilva@teste.com".ToUpper()
             };
 
             //set user password
@@ -98,8 +98,8 @@ namespace Blog_DevIO.Core.Data.Seed
                 Email = "blog@teste.com",
                 EmailConfirmed = true,
                 UserName = "blog@teste.com",
-                NormalizedUserName = "blog@teste.com",
-                NormalizedEmail = "blog@teste.com"
+                NormalizedUserName = "blog@teste.com".ToUpper(),
+                NormalizedEmail = "blog@teste.com".ToUpper()
             };
 
             //set user password

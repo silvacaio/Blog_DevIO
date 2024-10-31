@@ -11,9 +11,13 @@ namespace Blog_DevIO.Data.Repositories
         {
         }
 
-        public async Task<IEnumerable<Comment?>> GetByPostId(Guid postId)
+        public async Task<IEnumerable<Comment?>> GetByPostId(Guid postId, bool includeAuthor = false)
         {
-            return await DbSet.Where(c => c.PostId == postId).ToListAsync();
+            var query = DbSet.AsNoTracking();
+            if (includeAuthor)
+                query = query.Include(q => q.Author);
+
+            return await query.Where(c => c.PostId == postId && c.IsDeleted == false).ToListAsync();
         }
     }
 }

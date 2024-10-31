@@ -5,15 +5,16 @@ namespace Blog_DevIO.Core.Services.Abstractions
 {
     public interface ICommentService
     {
-        public Task<IEnumerable<Comment?>> Get();
+        public Task<IEnumerable<CommentViewModel?>> Get();
 
-        public Task<Comment?> GetById(Guid id);
+        public Task<CommentViewModel?> GetById(Guid id);
 
         public Task Delete(Guid id);
         Task Create(CreateCommentViewModel comment);
         Task<Comment?> Update(EditCommentViewModel comment);
 
         Task<Comment?> GetCommentToAction(Guid commentId);
-        Task<IEnumerable<Comment?>> GetByPostId(Guid postId);
+        Task<IEnumerable<CommentViewModel?>> GetByPostId(Guid postId);
+        CommentViewModel CreateCommentViewModel(Comment comment);
     }
 }

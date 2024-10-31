@@ -24,10 +24,12 @@ namespace Blog_DevIO.Data.Repositories
 
         public async Task<T?> Get(Guid id)
         {
-            return await DbSet.FindAsync(id);
+            return await DbSet
+                .AsNoTracking().
+                FirstOrDefaultAsync(d => d.Id == id);
         }
 
-        public async Task<IEnumerable<T?>> GetAll()
+        public virtual async Task<IEnumerable<T?>> GetAll()
         {
             return await DbSet.ToListAsync();
         }

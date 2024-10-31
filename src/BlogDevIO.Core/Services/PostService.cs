@@ -2,6 +2,7 @@
 using Blog_DevIO.Core.Entities;
 using Blog_DevIO.Core.Data.Abstractions;
 using Blog_DevIO.Core.ViewModels.Post;
+using Blog_DevIO.Core.ViewModels.Authors;
 namespace Blog_DevIO.Core.Services
 {
     public class PostService : IPostService
@@ -50,14 +51,18 @@ namespace Blog_DevIO.Core.Services
 
             var canEdit = CanEditPost(post);
 
+            var author = AuthorViewModel.Load(post.Author);
+            var comments = post.Comments?.AsParallel()
+                .Select(c => _commentService.CreateCommentViewModel(c)).ToArray();
+
             var postViewModel = PostWithCommentsAndAuthorViewModel.New(
                 post.Id,
                 post.Title,
                 post.Content,
                 post.Creation,
                 canEdit,
-                post.Author,
-                post.Comments);
+                author,
+                comments);
 
             return postViewModel;
         }
@@ -75,7 +80,7 @@ namespace Blog_DevIO.Core.Services
             await _postRepository.Save(newPost);
         }
 
-        public async Task<Post?> Update(EditPostViewModel post)
+        public async Task<Post?> Update(PostViewModel post)
         {
             var postToAction = await GetPostToAction(post.Id);
             if (postToAction == null)

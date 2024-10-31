@@ -16,23 +16,46 @@ namespace Blog_DevIO.Core.Services
             _userService = userService;
         }
 
-        public async Task<IEnumerable<Comment?>> Get()
+        public async Task<IEnumerable<CommentViewModel?>> Get()
         {
-            return await _commentRepository.GetAll();
+            var comments = await _commentRepository.GetAll();
+            if (comments == null)
+                return Enumerable.Empty<CommentViewModel>();
+
+            var commentsView = new List<CommentViewModel>();
+            foreach (var comment in comments)
+            {
+                commentsView.Add(CreateCommentViewModel(comment));
+            }
+
+            return commentsView;
         }
 
-        public async Task<Comment?> GetById(Guid id)
+        public async Task<CommentViewModel?> GetById(Guid id)
         {
-            return await _commentRepository.Get(id);
+            var comment = await _commentRepository.Get(id);
+            if (comment == null) return null;
+
+            return CreateCommentViewModel(comment);
         }
-        public async Task<IEnumerable<Comment?>> GetByPostId(Guid postId)
+        public async Task<IEnumerable<CommentViewModel?>> GetByPostId(Guid postId)
         {
-            return await _commentRepository.GetByPostId(postId);
+            var comments = await _commentRepository.GetByPostId(postId, true);
+            if (comments == null)
+                return Enumerable.Empty<CommentViewModel>();
+
+            var commentsView = new List<CommentViewModel>();
+            foreach (var comment in comments)
+            {
+                commentsView.Add(CreateCommentViewModel(comment));
+            }
+
+            return commentsView;
         }
         public async Task Create(CreateCommentViewModel comment)
         {
             var userId = _userService.GetId();
-            var newComment = new Comment(comment.Content, Guid.Parse(comment.PostId), Guid.Parse(userId));
+            var newComment = new Comment(comment.Content, comment.PostId, Guid.Parse(userId));
             await _commentRepository.Save(newComment);
         }
 
@@ -42,7 +65,7 @@ namespace Blog_DevIO.Core.Services
             if (commentToAction == null)
                 return null;
 
-            var newComment = new Comment(comment.Id, comment.Content, Guid.Parse(comment.PostId), commentToAction.AuthorId);
+            var newComment = new Comment(comment.Id, comment.Content, comment.PostId, commentToAction.AuthorId);
             await _commentRepository.Update(newComment);
             return newComment;
         }
@@ -58,7 +81,7 @@ namespace Blog_DevIO.Core.Services
 
         public async Task<Comment?> GetCommentToAction(Guid commentId)
         {
-            var commentToEdit = await GetById(commentId);
+            var commentToEdit = await _commentRepository.Get(commentId);
             if (commentToEdit == null)
                 return null;
 
@@ -66,6 +89,15 @@ namespace Blog_DevIO.Core.Services
                 return null;
 
             return commentToEdit;
+        }
+        public CommentViewModel CreateCommentViewModel(Comment comment)
+        {
+            var canEdit = CanEdit(comment);
+            return CommentViewModel.Load(comment.Id, comment.Content, comment.Creation, comment.Author, canEdit);
+        }
+        private bool CanEdit(Comment comment)
+        {
+            return _userService.IsAdmin() == true || _userService.GetId() == comment.AuthorId.ToString();
         }
     }
 }
