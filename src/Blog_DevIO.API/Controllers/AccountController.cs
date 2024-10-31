@@ -1,4 +1,6 @@
 ﻿using Blog_DevIO.API.Configurations;
+using Blog_DevIO.Core.Services.Abstractions;
+using Blog_DevIO.Core.ViewModels.Authors;
 using Blog_DevIO.Core.ViewModels.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -17,12 +19,14 @@ namespace Blog_DevIO.API.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly JwtSettings _jwtSettings;
+        private readonly IAuthorService _authorService;
 
-        public AccountController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, JwtSettings jwtSettings)
+        public AccountController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, JwtSettings jwtSettings, IAuthorService authorService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _jwtSettings = jwtSettings;
+            _authorService = authorService;
         }
 
         [HttpPost]
@@ -46,6 +50,8 @@ namespace Blog_DevIO.API.Controllers
 
             if (result.Succeeded == false)
                 return BadRequest(result.Errors);
+
+            await _authorService.Create(CreateAuthorViewModel.Create(Guid.Parse(user.Id), model.FistName, model.LastName));
 
             await _signInManager.SignInAsync(user, false);
             return Ok(await GetJwt(user.Email));
