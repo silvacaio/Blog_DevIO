@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Blog_DevIO.Web.Controllers
 {
+    [Authorize]
     [Route("posts")]
 
     public class PostsController : Controller
@@ -17,6 +18,7 @@ namespace Blog_DevIO.Web.Controllers
         }
 
         // GET: Posts
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(await _postService.Get());

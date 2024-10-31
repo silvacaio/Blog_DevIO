@@ -1,9 +1,11 @@
 ﻿using Blog_DevIO.Core.Services.Abstractions;
 using Blog_DevIO.Core.ViewModels.Comments;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog_DevIO.Web.Controllers
 {
+    [Authorize]
     [Route("comments")]
     public class CommentsController : Controller
     {

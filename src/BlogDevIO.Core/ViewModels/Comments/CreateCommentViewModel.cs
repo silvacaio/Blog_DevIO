@@ -13,6 +13,6 @@ namespace Blog_DevIO.Core.ViewModels.Comments
 
         [Required(ErrorMessage = "The Post is Required")]
         [DisplayName("Post")]
-        public string PostId { get; set; }
+        public Guid PostId { get; set; }
     }
 }
