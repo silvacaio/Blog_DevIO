@@ -24,6 +24,13 @@ namespace Blog_DevIO.Web.Controllers
             return View(await _postService.Get());
         }
 
+        // GET: Posts/user
+        [HttpGet("user")]
+        public async Task<IActionResult> User()
+        {
+            return View(await _postService.GetByUser());
+        }
+
         // GET: Posts/Details/5
         [HttpGet("details/{id:guid}")]
 

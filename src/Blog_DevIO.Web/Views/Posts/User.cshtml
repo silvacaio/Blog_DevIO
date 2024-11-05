@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Blog_DevIO.Core.ViewModels.Post.PostViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <p>
+        <div class="d-flex justify-content-end mb-4"><a asp-action="Create" class="btn btn-primary text-uppercase">Create New</a></div>
+    </p>
+}
+
+
+<div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+
+            @foreach (var item in Model)
+            {
+                <!-- Post preview-->
+                <div class="post-preview">
+                    <a asp-action="Details" asp-route-id="@item.Id">
+                        <h2 class="post-title">  @item.Title </h2>
+                        <span class="post-subtitle"> @(item.Content?.Length <= 200 ? item.Content : item.Content?.Substring(0, 200))...</span>
+                    </a>
+                    <p class="post-meta">
+                        Posted on
+                        @item.Creation.ToString("MMMM dd, yyyy", new System.Globalization.CultureInfo("en-US"))
+                    </p>
+                </div>
+                <!-- Divider-->
+                <hr class="my-4" />
+            }
+        </div>
+    </div>
+</div>
