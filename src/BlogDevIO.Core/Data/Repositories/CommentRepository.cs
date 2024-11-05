@@ -19,5 +19,12 @@ namespace Blog_DevIO.Data.Repositories
 
             return await query.Where(c => c.PostId == postId && c.IsDeleted == false).ToListAsync();
         }
+
+        public async Task<Comment?> GetByPostIdAndId(Guid postId, Guid id)
+        {
+            return await DbSet.
+                AsNoTracking()
+                .FirstOrDefaultAsync(c => c.PostId == postId && c.Id == id && c.IsDeleted == false);
+        }
     }
 }

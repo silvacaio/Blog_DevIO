@@ -1,7 +1,9 @@
 ﻿using Blog_DevIO.Core.Services.Abstractions;
 using Blog_DevIO.Core.ViewModels.Comments;
+using Blog_DevIO.Core.ViewModels.Post;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Blog_DevIO.Web.Controllers
 {
@@ -37,46 +39,66 @@ namespace Blog_DevIO.Web.Controllers
             return PartialView("_ListCommentsPartial", comments);
         }
 
-        // GET: Comments/Edit/5
-        public ActionResult Edit(int id)
+        // GET: Comments/Edit/5/5
+        [HttpGet("edit/{id:guid}/{postId:guid}")]
+        public async Task<IActionResult> Edit(Guid id, Guid postId)
         {
-            return View();
+            var comment = await _postService.CommentService.GetByPostIdAndId(postId, id);
+
+            if (comment == null)
+                return NotFound();
+
+            if (comment.CanEdit == false)
+                return RedirectToAction("Index", "Error", new { statusCode = 403 });
+
+
+            return PartialView("_EditCommentPartial", comment); // Return the partial view
         }
 
-        // POST: Comments/Edit/5
-        [HttpPost]
+
+        // POST: Posts/Edit/5
+
+        [HttpPost("edit/{id:guid}/{postId:guid}")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(Guid id, Guid postId, CommentViewModel commentViewModel)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            if (id != commentViewModel.Id)
+                return NotFound();
+
+            if (postId != commentViewModel.PostId)
+                return NotFound();
+
+            if (ModelState.IsValid == false)
+                return View(commentViewModel);
+
+            var comment = await _postService.CommentService.GetByPostIdAndId(postId, id);
+            if (comment == null)
+                return NotFound();
+
+            if (comment.CanEdit == false)
+                return RedirectToAction("Index", "Error", new { statusCode = 403 });
+
+            await _postService.CommentService.Update(comment);
+
+            return RedirectToAction("Index");
         }
 
-        // GET: Comments/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
 
         // POST: Comments/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [HttpPost("delete/{id:guid}/{postId:guid}")]
+        public async Task<IActionResult> DeleteConfirmed(Guid id, Guid postId)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var comment = await _postService.CommentService.GetByPostIdAndId(postId, id);
+            if (comment == null)
+                return NotFound();
+
+            if (comment.CanEdit == false)
+                return Forbid();
+
+            await _postService.CommentService.Delete(postId, id);
+
+            var comments = await _postService.CommentService.GetByPostId(postId);
+            return PartialView("_ListCommentsPartial", comments);
         }
     }
 }

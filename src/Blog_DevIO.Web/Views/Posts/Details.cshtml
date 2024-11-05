@@ -70,7 +70,7 @@
     <script src="~/js/post.js" type="text/javascript"></script>
      <script>
         // Passa a URL da ação para o script externo
-        initializePartialForm('@Url.Action("create", "comments")');
+            initializePartialForm('@Url.Action("create", "comments")', '@Url.Action("delete", "comments")', '@Url.Action("edit", "comments")');
     </script>
     }   
 }
