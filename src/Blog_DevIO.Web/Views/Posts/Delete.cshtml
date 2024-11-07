@@ -25,5 +25,5 @@
 <form asp-action="Delete">
     <input type="hidden" asp-for="Id" />
     <input type="submit" value="Delete" class="btn btn-danger" /> |
-   <a asp-action="Index" class="btn btn-primary text-uppercase">Back to List</a> 
+    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary text-uppercase">Back to Post</a>
 </form>

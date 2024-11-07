@@ -6,5 +6,15 @@ namespace Blog_DevIO.Core.ViewModels.Comments
     {
         [Required]
         public Guid Id { get; set; }
+
+        public static implicit operator CommentViewModel(EditCommentViewModel commentEdit)
+        {
+            return new CommentViewModel
+            {
+                Id = commentEdit.Id,
+                Content = commentEdit.Content,
+                PostId = commentEdit.PostId
+            };
+        }
     }
 }

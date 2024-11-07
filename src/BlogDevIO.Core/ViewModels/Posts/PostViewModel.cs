@@ -32,6 +32,6 @@ namespace Blog_DevIO.Core.ViewModels.Post
                 CanEdit = canEdit,
                 Creation = creation
             };
-        }
+        }      
     }
 }

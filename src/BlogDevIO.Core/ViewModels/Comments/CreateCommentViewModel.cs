@@ -11,8 +11,17 @@ namespace Blog_DevIO.Core.ViewModels.Comments
         [MinLength(10)]
         public string Content { get; set; }
 
-        [Required(ErrorMessage = "The Post is Required")]
+        [Required(ErrorMessage = "The PostId is Required")]
         [DisplayName("Post")]
         public Guid PostId { get; set; }
+
+        public static CreateCommentViewModel Create(Guid postId, string content)
+        {
+            return new CreateCommentViewModel
+            {
+                PostId = postId,
+                Content = content
+            };
+        }
     }
 }

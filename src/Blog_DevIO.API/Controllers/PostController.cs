@@ -84,7 +84,7 @@ namespace Blog_DevIO.API.Controllers
 
             try
             {
-                await _postService.Update(post);
+                await _postService.Update((PostViewModel)post);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -98,7 +98,7 @@ namespace Blog_DevIO.API.Controllers
                 }
             }
 
-            await _postService.Update(post);
+            await _postService.Update((PostViewModel)post);
 
             return RedirectToAction("GetByUser");
         }

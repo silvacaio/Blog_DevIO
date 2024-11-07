@@ -107,7 +107,7 @@ namespace Blog_DevIO.Web.Controllers
 
             await _postService.Update(postViewModel);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", new { id = postViewModel.Id });
         }
 
         // GET: Posts/Delete/5
