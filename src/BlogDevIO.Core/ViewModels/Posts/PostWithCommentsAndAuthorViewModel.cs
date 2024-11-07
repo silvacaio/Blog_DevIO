@@ -1,22 +1,24 @@
 ﻿
 using Blog_DevIO.Core.Entities;
+using Blog_DevIO.Core.ViewModels.Authors;
+using Blog_DevIO.Core.ViewModels.Comments;
 
 namespace Blog_DevIO.Core.ViewModels.Post
 {
     public class PostWithCommentsAndAuthorViewModel : PostViewModel
     {
-        public Author Author { get; set; }
-        public ICollection<Comment> Comments { get; set; }
+        public AuthorViewModel Author { get; set; }
+        public ICollection<CommentViewModel> Comments { get; set; }
 
         //COmments
 
         //Author
 
-        public static PostWithCommentsAndAuthorViewModel New(Guid id, string title, string content, DateTime creation, bool canEdit, Author author, ICollection<Comment> comments)
+        public static PostWithCommentsAndAuthorViewModel New(Guid id, string title, string content, DateTime creation, bool canEdit, AuthorViewModel author, ICollection<CommentViewModel> comments)
         {
             return new PostWithCommentsAndAuthorViewModel
             {
-                Id = id.ToString(),
+                Id = id,
                 Title = title,
                 Content = content,
                 CanEdit = canEdit,

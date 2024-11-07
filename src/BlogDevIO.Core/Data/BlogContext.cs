@@ -25,7 +25,6 @@ namespace Blog_DevIO.Core.Data
 
             foreach (var entry in ChangeTracker.Entries())
             {
-
                 switch (entry.State)
                 {
                     case EntityState.Deleted:

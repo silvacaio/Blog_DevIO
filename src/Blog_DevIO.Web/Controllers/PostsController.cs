@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Blog_DevIO.Web.Controllers
 {
+    [Authorize]
     [Route("posts")]
 
     public class PostsController : Controller
@@ -17,14 +18,22 @@ namespace Blog_DevIO.Web.Controllers
         }
 
         // GET: Posts
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(await _postService.Get());
         }
 
+        // GET: Posts/user
+        [HttpGet("user")]
+        public async Task<IActionResult> User()
+        {
+            return View(await _postService.GetByUser());
+        }
+
         // GET: Posts/Details/5
         [HttpGet("details/{id:guid}")]
-
+        [AllowAnonymous]
         public async Task<IActionResult> Details(Guid id)
         {
             var post = await _postService.GetPostWithCommentsAndAuthorById(id);
@@ -47,7 +56,7 @@ namespace Blog_DevIO.Web.Controllers
         // POST: Posts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreatePostViewModel post)
         {
@@ -67,9 +76,7 @@ namespace Blog_DevIO.Web.Controllers
             var post = await _postService.GetById(id);
 
             if (post == null)
-            {
                 return NotFound();
-            }
 
             if (post.CanEdit == false)
                 return RedirectToAction("Index", "Error", new { statusCode = 403 });
@@ -81,9 +88,9 @@ namespace Blog_DevIO.Web.Controllers
         // POST: Posts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.        
-        [HttpPost]
+        [HttpPost("edit/{id:guid}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, EditPostViewModel postViewModel)
+        public async Task<IActionResult> Edit(Guid id, PostViewModel postViewModel)
         {
             if (id != postViewModel.Id)
                 return NotFound();
@@ -100,7 +107,7 @@ namespace Blog_DevIO.Web.Controllers
 
             await _postService.Update(postViewModel);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", new { id = postViewModel.Id });
         }
 
         // GET: Posts/Delete/5

@@ -28,10 +28,12 @@ namespace Blog_DevIO.Data.Repositories
                 .ThenInclude(a => a.Author);
 
 
-            return await query.FirstOrDefaultAsync(a => a.Id == id);
+            return await query.Where(p => p.IsDeleted == false).FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public async Task<IEnumerable<Post?>> GetAll(bool includeComments, bool includeAuthor)
+        public async Task<IEnumerable<Post?>> GetAll(
+            bool includeComments,
+            bool includeAuthor)
         {
             var query = DbSet.AsNoTracking();
 
@@ -43,8 +45,17 @@ namespace Blog_DevIO.Data.Repositories
                 .ThenInclude(a => a.Author);
 
 
-            return await query.OrderByDescending(p => p.Creation)
-                                .ToListAsync();
+            return await query.Where(p => p.IsDeleted == false)
+                    .OrderByDescending(p => p.Creation)
+                    .ToListAsync();
+        }
+
+        public override async Task<IEnumerable<Post?>> GetAll()
+        {
+            var query = DbSet.AsNoTracking();
+            return await query.Where(p => p.IsDeleted == false)
+                  .OrderByDescending(p => p.Creation)
+                  .ToListAsync();
         }
     }
 }

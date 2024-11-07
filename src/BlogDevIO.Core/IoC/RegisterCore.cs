@@ -18,7 +18,7 @@ namespace Blog_DevIO.Core.IoC
             builder.Services.AddDbContext<BlogContext>(options =>
               options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                  .AddRoles<IdentityRole>()
                  .AddEntityFrameworkStores<BlogContext>()
                   .AddSignInManager()
@@ -30,7 +30,6 @@ namespace Blog_DevIO.Core.IoC
             builder.Services.AddScoped<ICommentRepository, CommentRepository>();
             builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 
-
             return builder;
         }
 
@@ -39,7 +38,7 @@ namespace Blog_DevIO.Core.IoC
             builder.Services.AddScoped<IPostService, PostService>();
             builder.Services.AddScoped<IAppUserService, AppUserService>();
             builder.Services.AddScoped<ICommentService, CommentService>();
-            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IAuthorService, AuthorService>();
 
             return builder;
         }

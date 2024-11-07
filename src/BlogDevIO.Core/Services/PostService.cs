@@ -2,6 +2,7 @@
 using Blog_DevIO.Core.Entities;
 using Blog_DevIO.Core.Data.Abstractions;
 using Blog_DevIO.Core.ViewModels.Post;
+using Blog_DevIO.Core.ViewModels.Authors;
 namespace Blog_DevIO.Core.Services
 {
     public class PostService : IPostService
@@ -21,16 +22,7 @@ namespace Blog_DevIO.Core.Services
         public async Task<IEnumerable<PostViewModel?>> Get()
         {
             var posts = await _postRepository.GetAll();
-            if (posts == null)
-                return Enumerable.Empty<PostViewModel>();
-
-            var postsView = new List<PostViewModel>();
-            foreach (var post in posts)
-            {
-                postsView.Add(CreatePostViewModel(post));
-            }
-
-            return postsView;
+            return ConvertPostsToPostsViewModel(posts);
         }
 
         public async Task<PostViewModel?> GetById(Guid id)
@@ -50,22 +42,29 @@ namespace Blog_DevIO.Core.Services
 
             var canEdit = CanEditPost(post);
 
+            var author = AuthorViewModel.Load(post.Author);
+            var comments = post.Comments?.AsParallel()
+                .Select(c => _commentService.CreateCommentViewModel(c))
+                .OrderBy(c => c.Creation).ToArray();
+
             var postViewModel = PostWithCommentsAndAuthorViewModel.New(
                 post.Id,
                 post.Title,
                 post.Content,
                 post.Creation,
                 canEdit,
-                post.Author,
-                post.Comments);
+                author,
+                comments);
 
             return postViewModel;
         }
 
-        public Task<IEnumerable<Post?>> GetByUser()
+        public async Task<IEnumerable<PostViewModel>?> GetByUser()
         {
             var userId = _userService.GetId();
-            return _postRepository.GetByUser(Guid.Parse(userId));
+            var posts = await _postRepository.GetByUser(Guid.Parse(userId));
+
+            return ConvertPostsToPostsViewModel(posts);
         }
 
         public async Task Create(CreatePostViewModel post)
@@ -75,7 +74,7 @@ namespace Blog_DevIO.Core.Services
             await _postRepository.Save(newPost);
         }
 
-        public async Task<Post?> Update(EditPostViewModel post)
+        public async Task<Post?> Update(PostViewModel post)
         {
             var postToAction = await GetPostToAction(post.Id);
             if (postToAction == null)
@@ -117,6 +116,20 @@ namespace Blog_DevIO.Core.Services
         {
             var canEdit = CanEditPost(post);
             return PostViewModel.New(post.Id, post.Title, post.Content, post.Creation, canEdit);
+        }
+
+        private IEnumerable<PostViewModel?> ConvertPostsToPostsViewModel(IEnumerable<Post>? posts)
+        {
+            if (posts == null)
+                return Enumerable.Empty<PostViewModel>();
+
+            var postsView = new List<PostViewModel>();
+            foreach (var post in posts)
+            {
+                postsView.Add(CreatePostViewModel(post));
+            }
+
+            return postsView;
         }
     }
 }

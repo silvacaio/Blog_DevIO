@@ -16,56 +16,106 @@ namespace Blog_DevIO.Core.Services
             _userService = userService;
         }
 
-        public async Task<IEnumerable<Comment?>> Get()
+        public async Task<IEnumerable<CommentViewModel?>> Get()
         {
-            return await _commentRepository.GetAll();
+            var comments = await _commentRepository.GetAll();
+            if (comments == null)
+                return Enumerable.Empty<CommentViewModel>();
+
+            var commentsView = new List<CommentViewModel>();
+            foreach (var comment in comments)
+            {
+                commentsView.Add(CreateCommentViewModel(comment));
+            }
+
+            return commentsView;
         }
 
-        public async Task<Comment?> GetById(Guid id)
+        public async Task<CommentViewModel?> GetById(Guid id)
         {
-            return await _commentRepository.Get(id);
+            var comment = await _commentRepository.Get(id);
+            if (comment == null) return null;
+
+            return CreateCommentViewModel(comment);
         }
-        public async Task<IEnumerable<Comment?>> GetByPostId(Guid postId)
+        public async Task<IEnumerable<CommentViewModel?>> GetByPostId(Guid postId)
         {
-            return await _commentRepository.GetByPostId(postId);
+            var comments = await _commentRepository.GetByPostId(postId, true);
+            if (comments == null)
+                return Enumerable.Empty<CommentViewModel>();
+
+            var commentsView = new List<CommentViewModel>();
+            foreach (var comment in comments)
+            {
+                commentsView.Add(CreateCommentViewModel(comment));
+            }
+
+            return commentsView;
         }
+
+        public async Task<CommentViewModel?> GetByPostIdAndId(Guid postId, Guid id)
+        {
+            var comment = await _commentRepository.GetByPostIdAndId(postId, id);
+            if (comment == null) return null;
+
+            return CreateCommentViewModel(comment);
+        }
+
         public async Task Create(CreateCommentViewModel comment)
         {
             var userId = _userService.GetId();
-            var newComment = new Comment(comment.Content, Guid.Parse(comment.PostId), Guid.Parse(userId));
+            var newComment = new Comment(comment.Content, comment.PostId, Guid.Parse(userId));
             await _commentRepository.Save(newComment);
         }
 
         public async Task<Comment?> Update(EditCommentViewModel comment)
         {
-            var commentToAction = await GetCommentToAction(comment.Id);
+            var commentToAction = await GetCommentToAction(comment.PostId, comment.Id);
             if (commentToAction == null)
                 return null;
 
-            var newComment = new Comment(comment.Id, comment.Content, Guid.Parse(comment.PostId), commentToAction.AuthorId);
+            var newComment = new Comment(comment.Id, comment.Content, comment.PostId, commentToAction.AuthorId);
             await _commentRepository.Update(newComment);
             return newComment;
         }
 
-        public async Task Delete(Guid id)
+        public async Task Update(CommentViewModel comment)
         {
-            var commentToAction = await GetCommentToAction(id);
+            var commentToAction = await GetCommentToAction(comment.PostId, comment.Id);
+            if (commentToAction == null)
+                return;
+
+            var newComment = new Comment(comment.Id, comment.Content, comment.PostId, commentToAction.AuthorId);
+            await _commentRepository.Update(newComment);
+        }
+
+        public async Task Delete(Guid postid, Guid id)
+        {
+            var commentToAction = await GetCommentToAction(postid, id);
             if (commentToAction == null)
                 return;
 
             await _commentRepository.Delete(commentToAction);
         }
-
-        public async Task<Comment?> GetCommentToAction(Guid commentId)
+        public async Task<Comment?> GetCommentToAction(Guid postId, Guid id)
         {
-            var commentToEdit = await GetById(commentId);
+            var commentToEdit = await _commentRepository.GetByPostIdAndId(postId, id);
             if (commentToEdit == null)
                 return null;
 
-            if (_userService.IsAdmin() == false || _userService.GetId() != commentToEdit.AuthorId.ToString())
+            if (CanEdit(commentToEdit) == false)
                 return null;
 
             return commentToEdit;
+        }
+        public CommentViewModel CreateCommentViewModel(Comment comment)
+        {
+            var canEdit = CanEdit(comment);
+            return CommentViewModel.Load(comment.Id, comment.Content, comment.Creation, comment.PostId, comment.Author, canEdit);
+        }
+        private bool CanEdit(Comment comment)
+        {
+            return _userService.IsAdmin() == true || _userService.GetId() == comment.AuthorId.ToString();
         }
     }
 }
