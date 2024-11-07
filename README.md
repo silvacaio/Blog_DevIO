@@ -3,12 +3,13 @@
 ## **1. Apresentação**
 
 Bem-vindo ao repositório do projeto **Blog_DevIO**. Este projeto é uma entrega do MBA DevXpert Full Stack .NET e é referente ao módulo **Introdução ao Desenvolvimento ASP.NET Core**.
+
 O objetivo principal desenvolver uma aplicação de blog que permite aos usuários criar, editar, visualizar e excluir posts e comentários, tanto através de uma interface web utilizando MVC quanto através de uma API RESTful.
 Descreva livremente mais detalhes do seu projeto aqui.
 
 ### **Autor(es)**
 - **Caio Gustavo Rodrigue da Silva**
-- 
+
 ## **2. Proposta do Projeto**
 
 O projeto consiste em:
@@ -25,13 +26,14 @@ O projeto consiste em:
   - ASP.NET Core MVC
   - ASP.NET Core Web API
   - Entity Framework Core
-- **Banco de Dados:** SQL Server
+- **Banco de Dados:** SQLite
 - **Autenticação e Autorização:**
   - ASP.NET Core Identity
   - JWT (JSON Web Token) para autenticação na API
 - **Front-end:**
   - Razor Pages/Views
   - HTML/CSS para estilização básica
+  - JavaScript e JQuery
 - **Documentação da API:** Swagger
 
 ## **4. Estrutura do Projeto**
@@ -42,9 +44,7 @@ A estrutura do projeto é organizada da seguinte forma:
 - src/
   - Blog_DevIO.Web/ - Projeto MVC
   - Blog_DevIO.API/ - API RESTful
-  - Blog_DevIO.Data/ - Modelos de Dados, Repositorios, Identity e Configuração do EF Core
-  - Blog_DevIO.Application/ - Camada com validações e abstrações
-  - Blog_DevIO.Domain/ - Domínio de negocio
+  - Blog_DevIO.Core/ - Modelos de Dados, Repositorios, Identity e Configuração do EF Core
 - README.md - Arquivo de Documentação do Projeto
 - FEEDBACK.md - Arquivo para Consolidação dos Feedbacks
 - .gitignore - Arquivo de Ignoração do Git
@@ -61,27 +61,26 @@ A estrutura do projeto é organizada da seguinte forma:
 ### **Pré-requisitos**
 
 - .NET SDK 8.0 ou superior
-- SQL Server
 - Visual Studio 2022 ou superior (ou qualquer IDE de sua preferência)
 - Git
 
 ### **Passos para Execução**
 
 1. **Clone o Repositório:**
-   - `git clone https://github.com/seu-usuario/nome-do-repositorio.git`
-   - `cd nome-do-repositorio`
+   - `git clone https://github.com/silvacaio/Blog_DevIO.git`
+   - `cd Blog_DevIO`
 
 2. **Configuração do Banco de Dados:**
-   - No arquivo `appsettings.json`, configure a string de conexão do SQL Server.
+   - No arquivo `appsettings.json`, configure a string de conexão do SQLite.
    - Rode o projeto para que a configuração do Seed crie o banco e popule com os dados básicos
 
 3. **Executar a Aplicação MVC:**
-   - `cd src/Blog.Mvc/`
+   - `cd src/Blog_DevIO.Web/`
    - `dotnet run`
    - Acesse a aplicação em: http://localhost:5000
 
 4. **Executar a API:**
-   - `cd src/Blog.Api/`
+   - `cd src/Blog_DevIO.API/`
    - `dotnet run`
    - Acesse a documentação da API em: http://localhost:5001/swagger
 
