@@ -79,7 +79,7 @@ namespace Blog_DevIO.API.Controllers
             if (ModelState.IsValid == false)
                 return ValidationProblem(ModelState);
 
-            if (_postService.GetPostToAction(id) == null)
+            if (await _postService.GetPostToAction(id) == null)
                 return NotFound();
 
             try
@@ -88,7 +88,7 @@ namespace Blog_DevIO.API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (_postService.GetById(id) == null)
+                if (await _postService.GetById(id) == null)
                 {
                     return NotFound();
                 }
@@ -111,7 +111,7 @@ namespace Blog_DevIO.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete(Guid id)
         {
-            if (_postService.GetPostToAction(id) == null)
+            if (await _postService.GetPostToAction(id) == null)
                 return NotFound();
 
             await _postService.Delete(id);
