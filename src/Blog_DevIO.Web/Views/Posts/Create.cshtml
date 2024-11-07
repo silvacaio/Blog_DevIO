@@ -23,15 +23,16 @@
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <br />
+                <input type="submit" value="Create" class="btn btn-primary text-uppercase" />
             </div>
         </form>
     </div>
 </div>
 <br />
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="d-flex justify-content-end"><a asp-action="Index" class="btn btn-primary text-uppercase">Back to Posts</a></div>
 </div>
 
 @section Scripts {

@@ -21,7 +21,7 @@ namespace Blog_DevIO.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            return View(await _postService.Get());
+            return View(await _postService.GetWithCommentsAndAuthorById());
         }
 
         // GET: Posts/user

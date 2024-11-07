@@ -19,10 +19,25 @@ namespace Blog_DevIO.Core.Services
             _commentService = commentService;
         }
 
-        public async Task<IEnumerable<PostViewModel?>> Get()
+        public async Task<IEnumerable<PostViewModel>?> Get()
         {
             var posts = await _postRepository.GetAll();
             return ConvertPostsToPostsViewModel(posts);
+        }
+
+        public async Task<IEnumerable<PostWithCommentsAndAuthorViewModel>?> GetWithCommentsAndAuthorById()
+        {
+            var posts = await _postRepository.GetAll(true, true);
+            if (posts?.Any() == false)
+                return null;
+
+            var postsViewModel = new List<PostWithCommentsAndAuthorViewModel>();
+            foreach (var post in posts)
+            {
+                postsViewModel.Add(CreatePostWithCommentsAndAuthor(post));
+
+            }
+            return postsViewModel;
         }
 
         public async Task<PostViewModel?> GetById(Guid id)
@@ -40,6 +55,11 @@ namespace Blog_DevIO.Core.Services
             if (post == null)
                 return null;
 
+            return CreatePostWithCommentsAndAuthor(post);
+        }
+
+        private PostWithCommentsAndAuthorViewModel CreatePostWithCommentsAndAuthor(Post? post)
+        {
             var canEdit = CanEditPost(post);
 
             var author = AuthorViewModel.Load(post.Author);
