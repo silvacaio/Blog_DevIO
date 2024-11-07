@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Presentation", "1 - Pre
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Core", "2 - Core", "{7F01045F-1315-4F57-A45A-3CEEBB3201A5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blog_DevIO.Core", "src\Blog_DevIO.Core\Blog_DevIO.Core.csproj", "{4079999E-0702-4C96-B6B2-DBA94FC6B5C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blog_DevIO.Core", "src\BlogDevIO.Core\Blog_DevIO.Core.csproj", "{4079999E-0702-4C96-B6B2-DBA94FC6B5C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog_DevIO.Web", "src\Blog_DevIO.Web\Blog_DevIO.Web.csproj", "{179BF91D-E4B3-4A56-9526-CFB61911F7AC}"
 EndProject
