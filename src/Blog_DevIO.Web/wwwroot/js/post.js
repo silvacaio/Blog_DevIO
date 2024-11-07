@@ -50,46 +50,54 @@
         });
     });
 
-    const editModal = $('#editModal');
-    editModal.on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Button that triggered the modal
-        const commentId = button.data('id');
-        const postId = button.data('postid');
-        var modal = $(this);
+    registerEditModalComment();
 
-        // Load the partial view into the modal
-        $.ajax({
-            url: '/comments/edit' + "/" + commentId + "/" + postId,
-            type: 'GET',
-            success: function (data) {
-                modal.find('#modalContent').html(data);
-            },
-            error: function () {
-                modal.find('#modalContent').html('<p>An error occurred while loading the data.</p>');
-            }
-        });
-    });
+    function registerEditModalComment() {
+        const editModal = $('#editModal');
+        editModal.on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            const commentId = button.data('id');
+            const postId = button.data('postid');
+            var modal = $(this);
 
-
-    $("#form-edit-comment").submit(function (event) {
-        event.preventDefault();
-
-        $.ajax({
-            url: '/comments/edit' + "/" + commentId + "/" + postId,
-            type: "POST",
-            data: $(this).serialize(),
-            success: function (response) {
-
-                const div = $('<div>').html(response);
-                if (div.find('#list-comments').length) {
-                    $('#Content').val('');
-                    $('#list-comments').html(response);
-                    editModal.modal('hide');
-                } else {
-                    $(this).html(response);
+            // Load the partial view into the modal
+            $.ajax({
+                url: '/comments/edit' + "/" + commentId + "/" + postId,
+                type: 'GET',
+                success: function (data) {
+                    modal.find('#modalContent').html(data);
+                    registerEditComment(commentId, postId, editModal);
+                },
+                error: function () {
+                    modal.find('#modalContent').html('<p>An error occurred while loading the data.</p>');
                 }
-            }
+            });
         });
-    });
+    }
+
+    function registerEditComment(commentId, postId, editModal) {
+        $("#form-edit-comment").submit(function (event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: '/comments/edit' + "/" + commentId + "/" + postId,
+                type: "POST",
+                data: $(this).serialize(),
+                success: function (response) {
+
+                    const div = $('<div>').html(response);
+                    if (div.find('#list-comments').length) {
+                        $('#Content').val('');
+                        $('#list-comments').html(response);
+                        editModal.modal('hide');
+                        registerEditModalComment();
+                    } else {
+                        $(this).html(response);
+                    }
+                }
+            });
+        });
+    }
+
 
 }

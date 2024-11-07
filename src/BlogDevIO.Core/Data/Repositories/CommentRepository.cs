@@ -17,7 +17,7 @@ namespace Blog_DevIO.Data.Repositories
             if (includeAuthor)
                 query = query.Include(q => q.Author);
 
-            return await query.Where(c => c.PostId == postId && c.IsDeleted == false).ToListAsync();
+            return await query.Where(c => c.PostId == postId && c.IsDeleted == false).OrderBy(c => c.Creation).ToListAsync();
         }
 
         public async Task<Comment?> GetByPostIdAndId(Guid postId, Guid id)

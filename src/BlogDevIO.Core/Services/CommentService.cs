@@ -103,7 +103,7 @@ namespace Blog_DevIO.Core.Services
             if (commentToEdit == null)
                 return null;
 
-            if (_userService.IsAdmin() == false || _userService.GetId() != commentToEdit.AuthorId.ToString())
+            if (CanEdit(commentToEdit) == false)
                 return null;
 
             return commentToEdit;

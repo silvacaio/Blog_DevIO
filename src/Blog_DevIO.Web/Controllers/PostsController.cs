@@ -33,7 +33,7 @@ namespace Blog_DevIO.Web.Controllers
 
         // GET: Posts/Details/5
         [HttpGet("details/{id:guid}")]
-
+        [AllowAnonymous]
         public async Task<IActionResult> Details(Guid id)
         {
             var post = await _postService.GetPostWithCommentsAndAuthorById(id);

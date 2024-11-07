@@ -23,7 +23,7 @@ namespace Blog_DevIO.Core.Services
         {
             var posts = await _postRepository.GetAll();
             return ConvertPostsToPostsViewModel(posts);
-        }     
+        }
 
         public async Task<PostViewModel?> GetById(Guid id)
         {
@@ -44,7 +44,8 @@ namespace Blog_DevIO.Core.Services
 
             var author = AuthorViewModel.Load(post.Author);
             var comments = post.Comments?.AsParallel()
-                .Select(c => _commentService.CreateCommentViewModel(c)).ToArray();
+                .Select(c => _commentService.CreateCommentViewModel(c))
+                .OrderBy(c => c.Creation).ToArray();
 
             var postViewModel = PostWithCommentsAndAuthorViewModel.New(
                 post.Id,

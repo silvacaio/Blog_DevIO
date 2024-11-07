@@ -1,7 +1,7 @@
 ﻿  @model Blog_DevIO.Core.ViewModels.Comments.CommentViewModel
 
 <!-- Comment form-->
-<form asp-controller="comments" asp-action="edit" class="mb-4" id="form-edit-comment">
+<form class="mb-4" id="form-edit-comment">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-group">
         @Html.AntiForgeryToken()

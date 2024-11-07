@@ -41,7 +41,8 @@ namespace Blog_DevIO.Data.Repositories
         }
         public async Task Update(T entity)
         {
-            DbSet.Update(entity);
+            DbSet.Attach(entity);
+            DbSet.Entry(entity).State = EntityState.Modified;
             await _blogContext.SaveChangesAsync();
         }
     }

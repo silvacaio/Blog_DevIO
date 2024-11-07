@@ -68,6 +68,8 @@ namespace Blog_DevIO.Web.Controllers
             if (postId != commentViewModel.PostId)
                 return NotFound();
 
+            ModelState.Remove(nameof(commentViewModel.Author));
+
             if (ModelState.IsValid == false)
                 return View(commentViewModel);
 
@@ -78,9 +80,10 @@ namespace Blog_DevIO.Web.Controllers
             if (comment.CanEdit == false)
                 return RedirectToAction("Index", "Error", new { statusCode = 403 });
 
-            await _postService.CommentService.Update(comment);
+            await _postService.CommentService.Update(commentViewModel);
 
-            return RedirectToAction("Index");
+            var comments = await _postService.CommentService.GetByPostId(postId);
+            return PartialView("_ListCommentsPartial", comments);
         }
 
 
