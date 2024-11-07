@@ -13,7 +13,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\BlogDevIO.Core\Blog_DevIO.Core.csproj" />
+	  <ProjectReference Include="..\Blog_DevIO.Core\Blog_DevIO.Core.csproj" />
 	</ItemGroup>
 
 </Project>

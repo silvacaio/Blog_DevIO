@@ -1,57 +1,59 @@
-﻿function initializePartialForm(newCommentAction, deleteCommentAction, editCommentAction) {
-    console.log(newCommentAction);
-    $("#form-new-comment").submit(function (event) {
-        event.preventDefault();
-
-        $.ajax({
-            url: newCommentAction,
-            type: "POST",
-            data: $(this).serialize(),
-            success: function (response) {
-
-                const div = $('<div>').html(response);
-                if (div.find('#list-comments').length) {
-                    $('#Content').val('');
-                    $('#list-comments').html(response);
-                } else {
-                    $(this).html(response);
-                }
-            }
-        });
-    });
-
-    const deleteModal = $('#deleteModal');
-    deleteModal.on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Button that triggered the modal
-        var commentId = button.data('itemid'); // Extract item ID from data-* attribute
-        var postId = button.data('itemid'); // Extract item ID from data-* attribute
-
-        $('#confirmDeleteBtn').off('click').on('click', function (event) {
+﻿$(document).ready(function () {
+    function registerNewComment() {
+        $("#form-new-comment").submit(function (event) {
             event.preventDefault();
 
-            const commentId = button.data('id');
-            const postId = button.data('postid');
-
             $.ajax({
-
-                url: deleteCommentAction + "/" + commentId + "/" + postId,
+                url: '/comments/create/',
                 type: "POST",
+                data: $(this).serialize(),
                 success: function (response) {
 
                     const div = $('<div>').html(response);
                     if (div.find('#list-comments').length) {
+                        $('#Content').val('');
                         $('#list-comments').html(response);
-                        deleteModal.modal('hide');
+                        registerDeleteComment();
+                        registerEditModalComment();                      
                     } else {
-                        deleteModal.find('.modal-body').html(response);
+                        $(this).html(response);
                     }
                 }
             });
         });
-    });
+    }
+    function registerDeleteComment() {
+        const deleteModal = $('#deleteModal');
+        deleteModal.on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var commentId = button.data('itemid'); // Extract item ID from data-* attribute
+            var postId = button.data('itemid'); // Extract item ID from data-* attribute
 
-    registerEditModalComment();
+            $('#confirmDeleteBtn').off('click').on('click', function (event) {
+                event.preventDefault();
 
+                const commentId = button.data('id');
+                const postId = button.data('postid');
+
+                $.ajax({
+                    url: '/comments/delete/' + commentId + "/" + postId,
+                    type: "POST",
+                    success: function (response) {
+
+                        const div = $('<div>').html(response);
+                        if (div.find('#list-comments').length) {
+                            $('#list-comments').html(response);
+                            registerDeleteComment();
+                            registerEditModalComment();                           
+                            deleteModal.modal('hide');
+                        } else {
+                            deleteModal.find('.modal-body').html(response);
+                        }
+                    }
+                });
+            });
+        });
+    }
     function registerEditModalComment() {
         const editModal = $('#editModal');
         editModal.on('show.bs.modal', function (event) {
@@ -62,7 +64,7 @@
 
             // Load the partial view into the modal
             $.ajax({
-                url: '/comments/edit' + "/" + commentId + "/" + postId,
+                url: '/comments/edit/' + commentId + "/" + postId,
                 type: 'GET',
                 success: function (data) {
                     modal.find('#modalContent').html(data);
@@ -74,6 +76,11 @@
             });
         });
     }
+
+
+    registerDeleteComment();
+    registerEditModalComment();
+    registerNewComment(); 
 
     function registerEditComment(commentId, postId, editModal) {
         $("#form-edit-comment").submit(function (event) {
@@ -90,7 +97,8 @@
                         $('#Content').val('');
                         $('#list-comments').html(response);
                         editModal.modal('hide');
-                        registerEditModalComment();
+                        registerDeleteComment();
+                        registerEditModalComment();                        
                     } else {
                         $(this).html(response);
                     }
@@ -99,5 +107,7 @@
         });
     }
 
+    
 
-}
+
+})
