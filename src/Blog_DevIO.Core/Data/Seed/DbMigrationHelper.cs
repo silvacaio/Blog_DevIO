@@ -57,11 +57,11 @@ namespace Blog_DevIO.Core.Data.Seed
             var adminUser = new IdentityUser
             {
                 Id = ADMIN_ID,
-                Email = "caiosilva@teste.com",
+                Email = "admin@blog.com",
                 EmailConfirmed = true,
-                UserName = "caiosilva@teste.com",
-                NormalizedUserName = "caiosilva@teste.com".ToUpper(),
-                NormalizedEmail = "caiosilva@teste.com".ToUpper()
+                UserName = "admin@blog.com",
+                NormalizedUserName = "admin@blog.com".ToUpper(),
+                NormalizedEmail = "admin@blog.com".ToUpper()
             };
 
             //set user password
@@ -69,7 +69,7 @@ namespace Blog_DevIO.Core.Data.Seed
             adminUser.PasswordHash = ph.HashPassword(adminUser, "Teste@123");
             await context.Users.AddAsync(adminUser);
 
-            var author = new Author(Guid.Parse(adminUser.Id), "Caio", "Silva");
+            var author = new Author(Guid.Parse(adminUser.Id), "Admin", "Blog");
             await context.Authors.AddAsync(author);
 
             await context.UserRoles.AddAsync(new IdentityUserRole<string>
